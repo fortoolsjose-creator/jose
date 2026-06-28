@@ -1,0 +1,56 @@
+// Los 39 procesos mensuales/quincenales de la administración (de la asistente).
+// Nombres y frecuencias tal cual su archivo "Procesos de operación COMPLETOS".
+export type ProcessDef = { no: number; name: string; freq: string; group: ProcessGroup };
+
+export const PROCESS_GROUPS = [
+  "Facturar y cobrar",
+  "Pagar",
+  "Archivo y cierre",
+  "Fondos y control",
+  "Análisis y mercado",
+  "Mantenimiento",
+  "Captación y otros",
+] as const;
+export type ProcessGroup = (typeof PROCESS_GROUPS)[number];
+
+export const PROCESSES: ProcessDef[] = [
+  { no: 1, name: "Formato de egresos", freq: "Mensual", group: "Pagar" },
+  { no: 2, name: "Facturación mes corriente", freq: "Mensual (1–5)", group: "Facturar y cobrar" },
+  { no: 3, name: "Envío de facturas por correo", freq: "Mensual (1–5)", group: "Facturar y cobrar" },
+  { no: 4, name: "Archivar factura en carpeta digital", freq: "Mensual", group: "Archivo y cierre" },
+  { no: 5, name: "Contabilidad del mes que terminó", freq: "Mensual", group: "Archivo y cierre" },
+  { no: 6, name: "Enviar recordatorios de pago", freq: "Quincenal", group: "Facturar y cobrar" },
+  { no: 7, name: "Realizar pagos de mantenimiento", freq: "Mensual", group: "Pagar" },
+  { no: 8, name: "Enviar correo a las administraciones", freq: "Mensual", group: "Pagar" },
+  { no: 9, name: "Escanear y archivar comprobantes", freq: "Mensual", group: "Archivo y cierre" },
+  { no: 10, name: "Agendar con Ofe los cobros de rentas", freq: "Mensual", group: "Facturar y cobrar" },
+  { no: 11, name: "Pago de Telmex, Telcel empresarial e ISN", freq: "Mensual", group: "Pagar" },
+  { no: 12, name: "Pago de servicios de edificios", freq: "Mensual", group: "Pagar" },
+  { no: 13, name: "Archivar ticket y comprobantes", freq: "Mensual", group: "Archivo y cierre" },
+  { no: 14, name: "Actualización de formatos de recibo de rentas", freq: "Mensual", group: "Facturar y cobrar" },
+  { no: 15, name: "Entrega de sobres, acuses y pagarés a Ofe", freq: "Mensual", group: "Facturar y cobrar" },
+  { no: 16, name: "Llenado de acuses de recibo de rentas", freq: "Mensual", group: "Facturar y cobrar" },
+  { no: 17, name: "Vaciado de rentas en caja fuerte", freq: "Mensual", group: "Facturar y cobrar" },
+  { no: 18, name: "Cobro de pago de servicios", freq: "Mensual", group: "Facturar y cobrar" },
+  { no: 19, name: "Pago quincenal a personal (limpieza, Faustino, oficiales, admin)", freq: "Quincenal", group: "Pagar" },
+  { no: 20, name: "Corte de ingresos y egresos contables", freq: "Mensual", group: "Archivo y cierre" },
+  { no: 21, name: "Registro de nóminas en admin", freq: "Quincenal", group: "Pagar" },
+  { no: 22, name: "Recorrido por edificios para identificar anomalías", freq: "Mensual", group: "Mantenimiento" },
+  { no: 23, name: "Revisión y actualización del cronograma de mantenimientos", freq: "Mensual", group: "Mantenimiento" },
+  { no: 24, name: "Archivo de fondo de mantenimiento", freq: "Mensual", group: "Fondos y control" },
+  { no: 25, name: "Archivo de fondo de operación", freq: "Mensual", group: "Fondos y control" },
+  { no: 26, name: "Archivo de control de ingresos y crecimiento por KPIs", freq: "Mensual", group: "Fondos y control" },
+  { no: 27, name: "Archivo de cumplimiento de objetivos", freq: "Quincenal", group: "Fondos y control" },
+  { no: 28, name: "Publicidad", freq: "Quincenal", group: "Captación y otros" },
+  { no: 29, name: "Estrategias de marketing", freq: "Quincenal", group: "Captación y otros" },
+  { no: 30, name: "Seguimiento de KPIs publicitarios", freq: "Mensual", group: "Análisis y mercado" },
+  { no: 31, name: "Seguimiento puntual de brokers", freq: "Quincenal", group: "Captación y otros" },
+  { no: 32, name: "Registro de ingresos y egresos generales", freq: "Mensual", group: "Archivo y cierre" },
+  { no: 33, name: "Actualización de estudio de mercado", freq: "Mensual", group: "Análisis y mercado" },
+  { no: 34, name: "Test de calidad", freq: "Mensual", group: "Análisis y mercado" },
+  { no: 35, name: "Reporte de resultados mensual", freq: "Mensual", group: "Análisis y mercado" },
+  { no: 36, name: "Actualización de formato de Faustino", freq: "Mensual", group: "Mantenimiento" },
+  { no: 37, name: "Actualización de lista de proveedores", freq: "Mensual", group: "Captación y otros" },
+  { no: 38, name: "Actualización de plan de mantenimiento", freq: "Mensual", group: "Mantenimiento" },
+  { no: 39, name: "Seguimiento completo de Querétaro", freq: "Mensual", group: "Captación y otros" },
+];

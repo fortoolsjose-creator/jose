@@ -1,0 +1,569 @@
+[
+ {
+  "prop": "COV",
+  "offices": [
+   201
+  ],
+  "raw_of": "201",
+  "persona": "José espino rodriguez",
+  "monto": 7500.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   202,
+   203
+  ],
+  "raw_of": "202  Y 203",
+  "persona": "Alma xochitl",
+  "monto": 14000.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   207
+  ],
+  "raw_of": "207",
+  "persona": "Alma xochitl",
+  "monto": 15720.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   208,
+   210
+  ],
+  "raw_of": "208 y 210",
+  "persona": "Jorge alberto",
+  "monto": 21750.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   301,
+   302,
+   303
+  ],
+  "raw_of": "301,302 y 303",
+  "persona": "Integracion unbat",
+  "monto": 20537.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   306
+  ],
+  "raw_of": "306",
+  "persona": "Betzi pimentel",
+  "monto": 8000.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   308
+  ],
+  "raw_of": "308",
+  "persona": "Jorge",
+  "monto": 7970.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   311
+  ],
+  "raw_of": "311",
+  "persona": "Miguel Ángel esquerra",
+  "monto": 9723.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   1,
+   2
+  ],
+  "raw_of": "1 y 2",
+  "persona": "Alexis Ramírez",
+  "monto": 21500.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   5
+  ],
+  "raw_of": "5",
+  "persona": "Laboratorio diesel",
+  "monto": 8250.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   7
+  ],
+  "raw_of": "7",
+  "persona": "Myriam rivas",
+  "monto": 9900.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "AME",
+  "offices": [
+   8
+  ],
+  "raw_of": "8",
+  "persona": "Jessy",
+  "monto": 16040.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "AME",
+  "offices": [
+   10
+  ],
+  "raw_of": "10",
+  "persona": "Elan",
+  "monto": 8460.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "AME",
+  "offices": [
+   601
+  ],
+  "raw_of": "601",
+  "persona": "Covy",
+  "monto": 14600.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "Campeche",
+  "offices": [
+   602
+  ],
+  "raw_of": "602",
+  "persona": "Fernando daniel loza",
+  "monto": 20000.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Campeche",
+  "offices": [
+   603
+  ],
+  "raw_of": "603",
+  "persona": "Grupo logistico yal (nat)",
+  "monto": 20044.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Isola",
+  "offices": [
+   202
+  ],
+  "raw_of": "202 c",
+  "persona": "Valentina y guadalupe",
+  "monto": 23000.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Isola",
+  "offices": [
+   301
+  ],
+  "raw_of": "301 c",
+  "persona": "Nicole / Sebastian",
+  "monto": 28000.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Medellín",
+  "offices": [
+   304
+  ],
+  "raw_of": "304",
+  "persona": "Max zavala hernández",
+  "monto": 7440.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "Rena",
+  "offices": [
+   402
+  ],
+  "raw_of": "402",
+  "persona": "LLLL",
+  "monto": 25330.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Naves",
+  "offices": [
+   14
+  ],
+  "raw_of": "14A",
+  "persona": "Pizarro",
+  "monto": 50400.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "Naves",
+  "offices": [
+   4
+  ],
+  "raw_of": "4",
+  "persona": "Grupo sph",
+  "monto": 51196.31,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   204
+  ],
+  "raw_of": "204",
+  "persona": "Myriam salgado",
+  "monto": 6500.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   205
+  ],
+  "raw_of": "205",
+  "persona": "Dora Moran",
+  "monto": 8000.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   206
+  ],
+  "raw_of": "206",
+  "persona": "Punto Panorama arq",
+  "monto": 14020.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   209
+  ],
+  "raw_of": "209",
+  "persona": "Alma xochitl",
+  "monto": 12070.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   307
+  ],
+  "raw_of": "307",
+  "persona": "Rovena Katharina",
+  "monto": 4100.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   310
+  ],
+  "raw_of": "310",
+  "persona": "Ana María Camacho",
+  "monto": 6600.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   312
+  ],
+  "raw_of": "312",
+  "persona": "Telmex",
+  "monto": 15600.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   4
+  ],
+  "raw_of": "4",
+  "persona": "Mario silva",
+  "monto": 18200.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "AME",
+  "offices": [
+   9
+  ],
+  "raw_of": "9",
+  "persona": "Marian Renteria",
+  "monto": 20000.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "AME",
+  "offices": [
+   11,
+   12
+  ],
+  "raw_of": "11 Y 12",
+  "persona": "Marco antonio fraide Gonzalez",
+  "monto": 25505.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "Isola",
+  "offices": [
+   1841
+  ],
+  "raw_of": "B1841",
+  "persona": "Karla Edith",
+  "monto": 1300.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Medellín",
+  "offices": [
+   305
+  ],
+  "raw_of": "305",
+  "persona": "Carlos Noria",
+  "monto": 6500.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Naves",
+  "offices": [
+   13
+  ],
+  "raw_of": "13A",
+  "persona": "Fertig",
+  "monto": 46633.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "Andalucía",
+  "offices": [
+   4
+  ],
+  "raw_of": "Casa 4",
+  "persona": "Nir shragai",
+  "monto": 41750.0,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "Alisos",
+  "offices": [
+   21
+  ],
+  "raw_of": "21",
+  "persona": "Claudia lópez",
+  "monto": 13300.0,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   11
+  ],
+  "raw_of": "11",
+  "persona": "EVOU",
+  "monto": 148852.72,
+  "metodo": "transferencia",
+  "factura": true
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   814
+  ],
+  "raw_of": "F814",
+  "persona": "88",
+  "monto": 14.08,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   811
+  ],
+  "raw_of": "F811",
+  "persona": "352",
+  "monto": 56.32,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   812
+  ],
+  "raw_of": "F812",
+  "persona": "362",
+  "monto": 57.92,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   846
+  ],
+  "raw_of": "F846",
+  "persona": "264",
+  "monto": 42.24,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   815
+  ],
+  "raw_of": "F815",
+  "persona": "880",
+  "monto": 140.8,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   810
+  ],
+  "raw_of": "F810",
+  "persona": "1672",
+  "monto": 267.52,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   813
+  ],
+  "raw_of": "F813",
+  "persona": "1672",
+  "monto": 267.52,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   847
+  ],
+  "raw_of": "F847",
+  "persona": "1760",
+  "monto": 281.6,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   820
+  ],
+  "raw_of": "F820",
+  "persona": "3552",
+  "monto": 568.32,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   819
+  ],
+  "raw_of": "F819",
+  "persona": "3552",
+  "monto": 568.32,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   806
+  ],
+  "raw_of": "F806",
+  "persona": "46848",
+  "monto": 7495.68,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   848
+  ],
+  "raw_of": "F848",
+  "persona": "3552",
+  "monto": 568.32,
+  "metodo": "efectivo",
+  "factura": false
+ },
+ {
+  "prop": "COV",
+  "offices": [
+   844
+  ],
+  "raw_of": "F844",
+  "persona": "50400",
+  "monto": 8064.0,
+  "metodo": "efectivo",
+  "factura": false
+ }
+]

@@ -1,0 +1,50 @@
+▲ Next.js 16.2.9 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 10.5s
+  Running TypeScript ...
+  Finished TypeScript in 10.4s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/23) ...
+  Generating static pages using 11 workers (5/23) 
+  Generating static pages using 11 workers (11/23) 
+  Generating static pages using 11 workers (17/23) 
+✓ Generating static pages using 11 workers (23/23) in 881ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /actualizar-clave
+├ ƒ /ajustes
+├ ƒ /auth/callback
+├ ƒ /cobros
+├ ƒ /gastos
+├ ƒ /inicio
+├ ƒ /inquilinos
+├ ƒ /inquilinos/[id]
+├ ○ /login
+├ ○ /manifest.webmanifest
+├ ƒ /mantenimiento
+├ ƒ /mantenimiento/[id]
+├ ƒ /mi-contrato
+├ ƒ /mi-renta
+├ ƒ /mis-reportes
+├ ƒ /mis-reportes/[id]
+├ ƒ /panel
+├ ƒ /propiedades
+├ ƒ /propiedades/[id]
+├ ○ /recuperar
+├ ƒ /rentabilidad
+├ ƒ /solicitudes
+├ ƒ /solicitudes/[id]
+├ ƒ /v/[public_slug]
+└ ƒ /vacantes
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,394 @@
+{
+  "properties": [
+    {
+      "prefix": "ALI",
+      "name": "Alisos",
+      "units": [
+        {
+          "code": "ALI21",
+          "rent": 15428.0,
+          "tenant": null,
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "AME",
+      "name": "AME (por confirmar)",
+      "units": [
+        {
+          "code": "AME01",
+          "rent": 21500.0,
+          "tenant": "ALEXIS",
+          "status": "occupied"
+        },
+        {
+          "code": "AME02",
+          "rent": 0,
+          "tenant": "ALEXIS",
+          "status": "occupied"
+        },
+        {
+          "code": "AME03",
+          "rent": 0,
+          "tenant": null,
+          "status": "vacant"
+        },
+        {
+          "code": "AME04",
+          "rent": 18200.0,
+          "tenant": "MARIO SILVA",
+          "status": "occupied"
+        },
+        {
+          "code": "AME05",
+          "rent": 8250.0,
+          "tenant": "NATALIA",
+          "status": "occupied"
+        },
+        {
+          "code": "AME06",
+          "rent": 0,
+          "tenant": null,
+          "status": "vacant"
+        },
+        {
+          "code": "AME07",
+          "rent": 9900.0,
+          "tenant": "MIRIAM RIVAS",
+          "status": "occupied"
+        },
+        {
+          "code": "AME08",
+          "rent": 16040.0,
+          "tenant": "JESSICA",
+          "status": "occupied"
+        },
+        {
+          "code": "AME09",
+          "rent": 20000.0,
+          "tenant": "MARIAN",
+          "status": "occupied"
+        },
+        {
+          "code": "AME10",
+          "rent": 19846.0,
+          "tenant": "ELAN",
+          "status": "occupied"
+        },
+        {
+          "code": "AME11",
+          "rent": 29595.8,
+          "tenant": "JAPIME",
+          "status": "occupied"
+        },
+        {
+          "code": "AME12",
+          "rent": 0,
+          "tenant": "JAPIME",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "ANDA",
+      "name": "Andalucía",
+      "units": [
+        {
+          "code": "ANDA4",
+          "rent": 41750.0,
+          "tenant": "BRENDA",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "CAM",
+      "name": "Campeche",
+      "units": [
+        {
+          "code": "CAM601",
+          "rent": 16936.0,
+          "tenant": "ABOGADOS",
+          "status": "occupied"
+        },
+        {
+          "code": "CAM602",
+          "rent": 18000.0,
+          "tenant": "TURISMO",
+          "status": "occupied"
+        },
+        {
+          "code": "CAM603",
+          "rent": 20044.0,
+          "tenant": "NATALIA",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "COV",
+      "name": "COV (por confirmar)",
+      "units": [
+        {
+          "code": "COV 305",
+          "rent": 8000.0,
+          "tenant": "TURISMO",
+          "status": "occupied"
+        },
+        {
+          "code": "COV 309",
+          "rent": 17000.0,
+          "tenant": "TURISMO",
+          "status": "occupied"
+        },
+        {
+          "code": "COV201",
+          "rent": 7500.0,
+          "tenant": "JOSE ESPINO",
+          "status": "occupied"
+        },
+        {
+          "code": "COV202",
+          "rent": 16240.0,
+          "tenant": "ALMA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV203",
+          "rent": 0,
+          "tenant": "ALMA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV204",
+          "rent": 6500.0,
+          "tenant": "MIRIAM",
+          "status": "occupied"
+        },
+        {
+          "code": "COV205",
+          "rent": 9000.0,
+          "tenant": "DORA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV206",
+          "rent": 207.0,
+          "tenant": "OCTAVIO",
+          "status": "occupied"
+        },
+        {
+          "code": "COV207",
+          "rent": 208.0,
+          "tenant": "ALMA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV208",
+          "rent": 21750.0,
+          "tenant": "CALL CENTER",
+          "status": "occupied"
+        },
+        {
+          "code": "COV209",
+          "rent": 14002.0,
+          "tenant": "PAYAN/ALMA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV210",
+          "rent": 0,
+          "tenant": "CALL CENTER",
+          "status": "occupied"
+        },
+        {
+          "code": "COV301",
+          "rent": 20537.0,
+          "tenant": "NATALIA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV302",
+          "rent": 0,
+          "tenant": "NATALIA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV303",
+          "rent": 0,
+          "tenant": "NATALIA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV304",
+          "rent": 42500.0,
+          "tenant": "TURISMO",
+          "status": "occupied"
+        },
+        {
+          "code": "COV306",
+          "rent": 8000.0,
+          "tenant": "BETZY",
+          "status": "occupied"
+        },
+        {
+          "code": "COV307",
+          "rent": 4100.0,
+          "tenant": "ROWENA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV308",
+          "rent": 7970.0,
+          "tenant": "DOM. FISC",
+          "status": "occupied"
+        },
+        {
+          "code": "COV310",
+          "rent": 8000.0,
+          "tenant": null,
+          "status": "vacant"
+        },
+        {
+          "code": "COV311",
+          "rent": 10500.0,
+          "tenant": "PAOLA",
+          "status": "occupied"
+        },
+        {
+          "code": "COV312",
+          "rent": 18096.0,
+          "tenant": "TELMEX",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "COVEST",
+      "name": "COV — Estacionamientos",
+      "units": [
+        {
+          "code": "COVEST1",
+          "rent": 0,
+          "tenant": "CALL CENTER",
+          "status": "occupied"
+        },
+        {
+          "code": "COVEST2",
+          "rent": 0,
+          "tenant": "PAOLA",
+          "status": "occupied"
+        },
+        {
+          "code": "COVEST3",
+          "rent": 0,
+          "tenant": "PAOLA",
+          "status": "occupied"
+        },
+        {
+          "code": "COVEST4",
+          "rent": 0,
+          "tenant": "OCTAVIO",
+          "status": "occupied"
+        },
+        {
+          "code": "COVEST5",
+          "rent": 0,
+          "tenant": "OCTAVIO",
+          "status": "occupied"
+        },
+        {
+          "code": "COVEST6",
+          "rent": 0,
+          "tenant": "PAYAN/ALMA",
+          "status": "occupied"
+        },
+        {
+          "code": "COVEST7",
+          "rent": 0,
+          "tenant": "CALL CENTER",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "ISOC",
+      "name": "Isola",
+      "units": [
+        {
+          "code": "ISOC202",
+          "rent": 23000.0,
+          "tenant": "VALENTINA",
+          "status": "occupied"
+        },
+        {
+          "code": "ISOC301",
+          "rent": 28000.0,
+          "tenant": "NICOLE",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "MED",
+      "name": "Medellín",
+      "units": [
+        {
+          "code": "MED304",
+          "rent": 8630.0,
+          "tenant": "PSICOLOGO",
+          "status": "occupied"
+        },
+        {
+          "code": "MED305",
+          "rent": 6500.0,
+          "tenant": "ALMACEN",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "NAV",
+      "name": "Naves",
+      "units": [
+        {
+          "code": "NAV021",
+          "rent": 0,
+          "tenant": null,
+          "status": "vacant"
+        },
+        {
+          "code": "NAV04",
+          "rent": 59387.723,
+          "tenant": "POLUX",
+          "status": "occupied"
+        },
+        {
+          "code": "NAV13A",
+          "rent": 54094.0,
+          "tenant": "FERTIG",
+          "status": "occupied"
+        },
+        {
+          "code": "NAV14A",
+          "rent": 58464.0,
+          "tenant": "PIZARRO",
+          "status": "occupied"
+        }
+      ]
+    },
+    {
+      "prefix": "REN",
+      "name": "Rena",
+      "units": [
+        {
+          "code": "REN402",
+          "rent": 25330.0,
+          "tenant": "NATALIA",
+          "status": "occupied"
+        }
+      ]
+    }
+  ]
+}
