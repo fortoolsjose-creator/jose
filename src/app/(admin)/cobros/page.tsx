@@ -220,6 +220,7 @@ export default async function CobrosPage(props: {
                           p.paid_date && `Pagado ${formatDate(p.paid_date)}`,
                           p.method && PAYMENT_METHOD_LABELS[p.method],
                           p.reference,
+                          p.recibio?.full_name && `Recibió ${p.recibio.full_name}`,
                         ]
                           .filter(Boolean)
                           .join(" · ")}

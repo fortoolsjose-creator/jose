@@ -233,7 +233,7 @@ export default async function PropertyDetailPage(props: {
                         const cur = u.lease?.rent_amount ?? u.rent_amount;
                         const min = u.rent_market_min ?? 0;
                         return cur > 0 && min > 0 && cur < min ? (
-                          <span className="text-primary font-medium"> · por debajo del mínimo de mercado</span>
+                          <span className="text-primary font-medium"> · por debajo del min. de mercado</span>
                         ) : null;
                       })()}
                     </p>

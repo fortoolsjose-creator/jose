@@ -68,6 +68,7 @@ export type PaymentRow = {
     unit: { label: string; property: { name: string } | null } | null;
     tenant: { full_name: string | null; email: string | null } | null;
   } | null;
+  recibio: { full_name: string | null } | null;
 };
 
 export async function listPayments(opts: {
@@ -78,7 +79,7 @@ export async function listPayments(opts: {
   let q = supabase
     .from("payments")
     .select(
-      "id, period_month, amount_due, amount_paid, due_date, paid_date, method, reference, status, fiscal_status, receipt_pdf_url, proof_path, tenant_reference, tenant_marked_paid_at, lease:leases(payment_day, unit:units(label, property:properties(name)), tenant:profiles(full_name, email))",
+      "id, period_month, amount_due, amount_paid, due_date, paid_date, method, reference, status, fiscal_status, receipt_pdf_url, proof_path, tenant_reference, tenant_marked_paid_at, lease:leases(payment_day, unit:units(label, property:properties(name)), tenant:profiles(full_name, email)), recibio:profiles!confirmed_by(full_name)",
     )
     .is("deleted_at", null);
   if (opts.month) q = q.eq("period_month", opts.month);

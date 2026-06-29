@@ -6,8 +6,9 @@ import { Check, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { matchTransaction, unmatchTransaction, deleteTransaction } from "../actions";
 import type { BankTx, CandidatePayment } from "@/app/_lib/data/bank";
+import { formatMXN } from "@/app/_lib/format";
 
-const fmt = (n: number) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2 });
+const fmt = (n: number) => formatMXN(n);
 
 export function ConciliacionTable({
   txs,

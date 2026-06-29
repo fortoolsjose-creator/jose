@@ -126,7 +126,7 @@ export type LeaseAccount = {
     annual_increase_pct: number | null;
     acta_entrega_path: string | null;
     acta_vencimiento_path: string | null;
-    unit: { label: string; m2: number | null; rent_market_avg: number | null; property: { name: string } | null } | null;
+    unit: { label: string; m2: number | null; rent_market_min: number | null; rent_market_avg: number | null; rent_market_max: number | null; property: { name: string } | null } | null;
     tenant: {
       full_name: string | null;
       email: string | null;
@@ -159,7 +159,7 @@ export async function getLeaseAccount(leaseId: string): Promise<LeaseAccount | n
   const { data: lease } = await supabase
     .from("leases")
     .select(
-      "id, tenant_profile_id, rent_amount, deposit_amount, deposit_paid, maintenance_fee, parking_fee, furniture_fee, garantia_monto, poliza_vigencia, pagare_referencia, payment_day, status, start_date, end_date, annual_increase_pct, acta_entrega_path, acta_vencimiento_path, unit:units(label, m2, rent_market_avg, property:properties(name)), tenant:profiles(full_name, email, phone, rfc, razon_social, regimen_fiscal, uso_cfdi, requiere_factura)",
+      "id, tenant_profile_id, rent_amount, deposit_amount, deposit_paid, maintenance_fee, parking_fee, furniture_fee, garantia_monto, poliza_vigencia, pagare_referencia, payment_day, status, start_date, end_date, annual_increase_pct, acta_entrega_path, acta_vencimiento_path, unit:units(label, m2, rent_market_min, rent_market_avg, rent_market_max, property:properties(name)), tenant:profiles(full_name, email, phone, rfc, razon_social, regimen_fiscal, uso_cfdi, requiere_factura)",
     )
     .eq("id", leaseId)
     .is("deleted_at", null)

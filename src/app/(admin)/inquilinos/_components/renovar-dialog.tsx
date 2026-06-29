@@ -40,7 +40,7 @@ export function RenovarDialog({
   const [pct, setPct] = useState(suggestedPct != null ? String(suggestedPct) : "");
   const [rent, setRent] = useState(
     suggestedPct != null
-      ? (currentRent * (1 + suggestedPct / 100)).toFixed(2)
+      ? String(Math.round(currentRent * (1 + suggestedPct / 100)))
       : String(currentRent),
   );
   const [end, setEnd] = useState(addYear(currentEnd));
@@ -51,7 +51,7 @@ export function RenovarDialog({
   function onPct(v: string) {
     setPct(v);
     const n = parseFloat(v);
-    if (Number.isFinite(n)) setRent((currentRent * (1 + n / 100)).toFixed(2));
+    if (Number.isFinite(n)) setRent(String(Math.round(currentRent * (1 + n / 100))));
   }
 
   function submit() {
@@ -106,7 +106,7 @@ export function RenovarDialog({
               <Input
                 id="rent"
                 type="number"
-                step="0.01"
+                step="1"
                 value={rent}
                 onChange={(e) => setRent(e.target.value)}
               />

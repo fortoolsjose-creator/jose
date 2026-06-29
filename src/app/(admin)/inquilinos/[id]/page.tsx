@@ -208,7 +208,9 @@ export default async function EstadoDeCuentaPage(props: {
             cuota={lease.maintenance_fee}
             desdeDefault={lease.start_date ? lease.start_date.slice(0, 7) : ""}
             m2={lease.unit?.m2 ?? null}
+            marketMin={lease.unit?.rent_market_min ?? null}
             marketAvg={lease.unit?.rent_market_avg ?? null}
+            marketMax={lease.unit?.rent_market_max ?? null}
           />
         </div>
       </div>
