@@ -4,10 +4,33 @@ import { CalendarClock, ChevronRight } from "lucide-react";
 import { getRenewalCalendar, type RenewalRow } from "@/app/_lib/data/renewals";
 import { PageHeader } from "@/app/_components/page-header";
 import { EmptyState } from "@/app/_components/empty-state";
+import { SortSelect, type SortOption } from "@/app/_components/sort-select";
+import { dateAsc, dateDesc } from "@/app/_lib/sort";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatMXN, formatDate } from "@/app/_lib/format";
 
 export const metadata: Metadata = { title: "Renovaciones" };
+
+const OPTS: SortOption[] = [
+  { value: "vence_asc", label: "Vencimiento (más próximo)" },
+  { value: "vence_desc", label: "Vencimiento (más lejano)" },
+  { value: "ingreso_desc", label: "Ingreso del contrato (mayor a menor)" },
+  { value: "ingreso_asc", label: "Ingreso del contrato (menor a mayor)" },
+  { value: "antiguedad_desc", label: "Antigüedad del contrato (más reciente)" },
+  { value: "antiguedad_asc", label: "Antigüedad del contrato (más antiguo)" },
+];
+
+function sortRows(rows: RenewalRow[], orden: string): RenewalRow[] {
+  const r = [...rows];
+  switch (orden) {
+    case "vence_desc": return r.sort((a, b) => dateDesc(a.end_date, b.end_date));
+    case "ingreso_desc": return r.sort((a, b) => b.ingreso - a.ingreso);
+    case "ingreso_asc": return r.sort((a, b) => a.ingreso - b.ingreso);
+    case "antiguedad_desc": return r.sort((a, b) => dateDesc(a.start_date, b.start_date));
+    case "antiguedad_asc": return r.sort((a, b) => dateAsc(a.start_date, b.start_date));
+    default: return r.sort((a, b) => dateAsc(a.end_date, b.end_date));
+  }
+}
 
 function Bucket({
   title,
@@ -60,7 +83,13 @@ function Bucket({
   );
 }
 
-export default async function RenovacionesPage() {
+export default async function RenovacionesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ orden?: string }>;
+}) {
+  const sp = await searchParams;
+  const orden = OPTS.some((o) => o.value === sp.orden) ? sp.orden! : "vence_asc";
   const cal = await getRenewalCalendar();
   const conFecha = cal.total - cal.sinFecha;
 
@@ -75,31 +104,34 @@ export default async function RenovacionesPage() {
         <EmptyState
           icon={CalendarClock}
           title="Sin fechas de renovación capturadas"
-          description="Captura la vigencia en cada contrato (Inquilinos → un inquilino → Contrato) y aquí verás el calendario."
+          description="Captura la vigencia en cada contrato (Arrendatarios → un arrendatario → Contrato) y aquí verás el calendario."
         />
       ) : (
         <>
+          <div className="mb-4">
+            <SortSelect options={OPTS} current={orden} />
+          </div>
           <Bucket
             title="Vencidos"
             subtitle="Ya pasó la fecha de renovación — atiéndelos primero."
-            rows={cal.vencidos}
+            rows={sortRows(cal.vencidos, orden)}
             tone="danger"
           />
           <Bucket
             title="Este mes"
             subtitle="Renuevan en los próximos 30 días."
-            rows={cal.esteMes}
+            rows={sortRows(cal.esteMes, orden)}
             tone="warn"
           />
           <Bucket
             title="Próximos (31–90 días)"
             subtitle="Para ir preparando la propuesta."
-            rows={cal.proximos}
+            rows={sortRows(cal.proximos, orden)}
           />
           <Bucket
             title="Más adelante"
             subtitle="El resto del año."
-            rows={cal.adelante}
+            rows={sortRows(cal.adelante, orden)}
           />
         </>
       )}

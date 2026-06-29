@@ -13,7 +13,7 @@ export function daysOverdue(due: string | null): number {
   const diff = Math.floor((Date.now() - new Date(due + "T00:00:00Z").getTime()) / DAY);
   return diff > 0 ? diff : 0;
 }
-function isOverdue(p: { amount_due: number; amount_paid: number; status: string; due_date: string | null; period_month?: string | null }): boolean {
+export function isOverdue(p: { amount_due: number; amount_paid: number; status: string; due_date: string | null; period_month?: string | null }): boolean {
   const bal = Number(p.amount_due) - Number(p.amount_paid);
   if (bal <= 0) return false;
   // La renta del mes en curso (o de meses futuros) todavía NO se considera
@@ -87,7 +87,7 @@ export async function listDebtors(): Promise<Debtor[]> {
       byLease.get(r.lease_id) ?? {
         saldo: 0,
         oldest: null,
-        tenant: lease?.tenant?.full_name ?? lease?.tenant?.email ?? "Inquilino",
+        tenant: lease?.tenant?.full_name ?? lease?.tenant?.email ?? "Arrendatario",
         unit: [lease?.unit?.property?.name, lease?.unit?.label].filter(Boolean).join(" · "),
       };
     e.saldo += Number(r.amount_due) - Number(r.amount_paid);

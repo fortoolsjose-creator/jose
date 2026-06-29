@@ -190,7 +190,7 @@ export function PropertyDialog({
           </div>
           <div className="space-y-2 rounded-lg border p-3">
             <p className="text-muted-foreground text-xs font-medium">
-              Cuenta para depósitos (la ve el inquilino al pagar)
+              Cuenta para depósitos (la ve el arrendatario al pagar)
             </p>
             <div className="space-y-1.5">
               <Label htmlFor="clabe">CLABE</Label>

@@ -38,7 +38,7 @@ export async function markAsPaid(
   }
 
   // Guarda la imagen del comprobante (solo si está en la carpeta del propio
-  // inquilino). El inquilino no puede actualizar payments por RLS, así que tras
+  // arrendatario). El arrendatario no puede actualizar payments por RLS, así que tras
   // verificar que el pago es suyo, lo escribimos con el cliente admin.
   if (
     typeof proofPath === "string" &&
@@ -66,9 +66,9 @@ export async function getProofUrl(
 ): Promise<{ url?: string; error?: string }> {
   const profile = await getProfile();
   if (!profile) return { error: "No autorizado." };
-  // RLS sobre payments solo deja ver los pagos del propio inquilino: si el
+  // RLS sobre payments solo deja ver los pagos del propio arrendatario: si el
   // comprobante pertenece a uno de ellos, lo firmamos con admin (el staff lo sube
-  // a {org}/comprobantes/... que la RLS de Storage del inquilino no alcanza).
+  // a {org}/comprobantes/... que la RLS de Storage del arrendatario no alcanza).
   const supabase = await createClient();
   const { data: pay } = await supabase
     .from("payments")

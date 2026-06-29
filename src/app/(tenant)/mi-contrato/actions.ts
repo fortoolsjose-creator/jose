@@ -12,7 +12,7 @@ export async function getActaUrl(
   if (!profile || profile.role !== "tenant") return { error: "No autorizado." };
   if (kind !== "entrega" && kind !== "vencimiento") return { error: "Documento inválido." };
 
-  // RLS: solo devuelve el contrato del propio inquilino.
+  // RLS: solo devuelve el contrato del propio arrendatario.
   const supabase = await createClient();
   const { data: lease } = await supabase
     .from("leases")

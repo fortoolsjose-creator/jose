@@ -23,7 +23,7 @@ export default async function AnunciosPage() {
     <>
       <PageHeader
         title="Avisos"
-        subtitle="Comunica a tus inquilinos cortes de agua, mantenimientos, cambios de cuenta… Lo ven en su portal."
+        subtitle="Comunica a tus arrendatarios cortes de agua, mantenimientos, cambios de cuenta… Lo ven en su portal."
         action={<AnnouncementDialog properties={props ?? []} />}
       />
 
@@ -31,7 +31,7 @@ export default async function AnunciosPage() {
         <EmptyState
           icon={Megaphone}
           title="Sin avisos"
-          description="Publica un aviso y aparecerá en el inicio de tus inquilinos."
+          description="Publica un aviso y aparecerá en el inicio de tus arrendatarios."
         />
       ) : (
         <div className="space-y-3">

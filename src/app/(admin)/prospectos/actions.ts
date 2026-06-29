@@ -106,7 +106,7 @@ export type ConvertProspectResult = {
 };
 
 /**
- * Convierte un prospecto en inquilino: crea (o reusa) su acceso, un contrato
+ * Convierte un prospecto en arrendatario: crea (o reusa) su acceso, un contrato
  * BORRADOR (pending) en la unidad asignada, y enlaza/cierra el prospecto.
  * Espejo de convertToTenant (Solicitudes): claim atómico + rollback si falla.
  */
@@ -125,7 +125,7 @@ export async function convertProspectToTenant(
     .eq("id", prospectId)
     .maybeSingle();
   if (!p || p.org_id !== profile.org_id) return { error: "Prospecto no encontrado." };
-  if (p.converted_at) return { error: "Este prospecto ya se convirtió en inquilino." };
+  if (p.converted_at) return { error: "Este prospecto ya se convirtió en arrendatario." };
   if (!p.unit_id) return { error: "Asigna una unidad al prospecto antes de convertirlo." };
   if (!(p.contrato_ok && p.pagare_ok && p.garantia_ok && p.acta_ok))
     return { error: "Completa el papeleo (contrato, pagaré, garantía y acta) antes de convertir." };
@@ -173,7 +173,7 @@ export async function convertProspectToTenant(
     });
     if (cErr || !created?.user) {
       await rollback();
-      return { error: "No se pudo crear el inquilino (¿el correo ya está en uso?)." };
+      return { error: "No se pudo crear el arrendatario (¿el correo ya está en uso?)." };
     }
     tenantId = created.user.id;
     const { error: pErr } = await admin.from("profiles").insert({
@@ -186,11 +186,11 @@ export async function convertProspectToTenant(
     });
     if (pErr) {
       await rollback();
-      return { error: "No se pudo crear el perfil del inquilino." };
+      return { error: "No se pudo crear el perfil del arrendatario." };
     }
   }
 
-  // Contrato borrador (pending) — staff lo activa/ajusta en Inquilinos.
+  // Contrato borrador (pending) — staff lo activa/ajusta en Arrendatarios.
   // Renta = lo negociado con el prospecto si existe, si no la de la unidad.
   const rent = p.rent_target && p.rent_target > 0 ? p.rent_target : unit.rent_amount;
   const { data: lease, error: lErr } = await admin

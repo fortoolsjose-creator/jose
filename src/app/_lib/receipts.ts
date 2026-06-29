@@ -58,7 +58,7 @@ export async function generateReceiptPdf(d: ReceiptData): Promise<Uint8Array> {
     draw(value, margin + 150, y, bold, 11);
     y -= 24;
   };
-  row("Inquilino", d.tenantName);
+  row("Arrendatario", d.tenantName);
   row("Unidad", [d.propertyName, d.unitLabel].filter(Boolean).join(" - "));
   row("Periodo", d.periodLabel);
   row("Metodo de pago", d.methodLabel);

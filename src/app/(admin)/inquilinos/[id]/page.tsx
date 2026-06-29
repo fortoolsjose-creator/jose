@@ -67,7 +67,7 @@ export default async function EstadoDeCuentaPage(props: {
   const tenantDocs = lease.tenant_profile_id
     ? await listDocuments("profile", lease.tenant_profile_id)
     : [];
-  const tenant = lease.tenant?.full_name ?? lease.tenant?.email ?? "Inquilino";
+  const tenant = lease.tenant?.full_name ?? lease.tenant?.email ?? "Arrendatario";
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -75,7 +75,7 @@ export default async function EstadoDeCuentaPage(props: {
         href="/inquilinos"
         className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm"
       >
-        <ArrowLeft className="size-4" /> Inquilinos
+        <ArrowLeft className="size-4" /> Arrendatarios
       </Link>
 
       <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -216,7 +216,7 @@ export default async function EstadoDeCuentaPage(props: {
       {lease.tenant_profile_id && (
         <div className="mb-6 space-y-5 rounded-lg border p-4">
           <div>
-            <h2 className="text-lg font-semibold">Expediente del inquilino</h2>
+            <h2 className="text-lg font-semibold">Expediente del arrendatario</h2>
             <p className="text-muted-foreground text-sm">
               Datos fiscales y documentos, todo en un solo lugar.
             </p>
@@ -272,7 +272,7 @@ export default async function EstadoDeCuentaPage(props: {
                   <AbonoList abonos={abonosByPayment[p.id] ?? []} />
                   {p.tenant_marked_paid_at && p.status !== "paid" && (
                     <p className="text-muted-foreground text-xs">
-                      El inquilino marcó como pagado{p.tenant_reference ? ` (clave ${p.tenant_reference})` : ""}.
+                      El arrendatario marcó como pagado{p.tenant_reference ? ` (clave ${p.tenant_reference})` : ""}.
                     </p>
                   )}
                 </div>

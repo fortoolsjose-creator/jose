@@ -18,7 +18,7 @@ export async function createRequest(
   const parsed = requestSchema.safeParse(input);
   if (!parsed.success) return { error: "Revisa los datos del reporte." };
   const d = parsed.data;
-  // Acepta solo una ruta dentro de la carpeta del propio inquilino (anti-spoof).
+  // Acepta solo una ruta dentro de la carpeta del propio arrendatario (anti-spoof).
   const safePhoto =
     typeof photoPath === "string" &&
     photoPath.startsWith(`${profile.org_id}/${profile.id}/`)
@@ -61,7 +61,7 @@ export async function createRequest(
     request_id: req.id,
     actor_id: profile.id,
     type: "created",
-    body: "Reporte creado por el inquilino.",
+    body: "Reporte creado por el arrendatario.",
   });
 
   if (safePhoto) {

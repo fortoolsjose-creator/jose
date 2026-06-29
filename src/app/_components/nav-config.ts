@@ -40,7 +40,7 @@ export const ADMIN_NAV: NavGroup[] = [
     title: "Negocio",
     items: [
       { href: "/propiedades", label: "Propiedades", icon: Building2 },
-      { href: "/inquilinos", label: "Inquilinos", icon: Users },
+      { href: "/inquilinos", label: "Arrendatarios", icon: Users },
       { href: "/reportes", label: "Reportes", icon: BarChart3 },
     ],
   },
@@ -90,7 +90,7 @@ export const ADMIN_NAV: NavGroup[] = [
   { items: [{ href: "/ajustes", label: "Ajustes", icon: Settings }] },
 ];
 
-// Tenant (inquilino) — corto y simple a propósito (un solo grupo, sin títulos).
+// Tenant (arrendatario) — corto y simple a propósito (un solo grupo, sin títulos).
 export const TENANT_NAV: NavGroup[] = [
   {
     items: [

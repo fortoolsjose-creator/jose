@@ -110,7 +110,7 @@ export async function getRequest(id: string): Promise<{
 
   const rows = (events ?? []) as unknown as RequestEventRow[];
   // Las fotos viven en el bucket privado "documents": firmamos una URL temporal
-  // para poder mostrarlas. RLS deja al inquilino ver las suyas y al staff las de su org.
+  // para poder mostrarlas. RLS deja al arrendatario ver las suyas y al staff las de su org.
   await Promise.all(
     rows
       .filter((e) => e.type === "photo" && e.photo_url)

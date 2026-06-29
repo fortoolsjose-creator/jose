@@ -27,7 +27,7 @@ export default async function ProspectosPage() {
     <>
       <PageHeader
         title="Prospectos"
-        subtitle="Pipeline de inquilinos: del prospecto al cliente, con evaluación de riesgo."
+        subtitle="Pipeline de arrendatarios: del prospecto al cliente, con evaluación de riesgo."
         action={<ProspectDialog properties={properties} />}
       />
 

@@ -6,9 +6,11 @@ import {
   listPayments,
   listPaymentMonths,
 } from "@/app/_lib/data/payments";
-import { getCollectionSummary, listDebtors } from "@/app/_lib/data/finance";
+import { getCollectionSummary, listDebtors, daysOverdue } from "@/app/_lib/data/finance";
 import { getProfile } from "@/app/_lib/dal";
 import { PageHeader } from "@/app/_components/page-header";
+import { SortSelect, type SortOption } from "@/app/_components/sort-select";
+import { dateAsc, dateDesc } from "@/app/_lib/sort";
 import { ProofButton } from "@/app/_components/proof-button";
 import { EmptyState } from "@/app/_components/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,21 +59,48 @@ function SummaryCard({
   );
 }
 
+const OPTS: SortOption[] = [
+  { value: "vence_asc", label: "Fecha de vencimiento (más próxima)" },
+  { value: "vence_desc", label: "Fecha de vencimiento (más lejana)" },
+  { value: "atraso_desc", label: "Días de atraso (mayor a menor)" },
+  { value: "atraso_asc", label: "Días de atraso (menor a mayor)" },
+  { value: "monto_desc", label: "Monto (mayor a menor)" },
+  { value: "monto_asc", label: "Monto (menor a mayor)" },
+  { value: "pago_desc", label: "Fecha de pago (más reciente)" },
+  { value: "pago_asc", label: "Fecha de pago (más antigua)" },
+  { value: "estado", label: "Estado (vencido primero)" },
+];
+const STATUS_ORDER: Record<string, number> = { overdue: 0, pending: 1, partial: 2, paid: 3 };
+
 export default async function CobrosPage(props: {
-  searchParams: Promise<{ month?: string; status?: string }>;
+  searchParams: Promise<{ month?: string; status?: string; orden?: string }>;
 }) {
   await ensureCurrentPayments();
   const sp = await props.searchParams;
   const monthValues = await listPaymentMonths();
   const months = monthValues.map((m) => ({ value: m, label: formatMonth(m) }));
   const month = sp.month ?? monthValues[0];
-  const [payments, summary, debtors, profile] = await Promise.all([
+  const orden = OPTS.some((o) => o.value === sp.orden) ? sp.orden! : "vence_asc";
+  const [paymentsRaw, summary, debtors, profile] = await Promise.all([
     listPayments({ month, status: sp.status }),
     getCollectionSummary(),
     listDebtors(),
     getProfile(),
   ]);
   const orgId = profile?.org_id ?? "";
+  const payments = [...paymentsRaw].sort((a, b) => {
+    switch (orden) {
+      case "vence_desc": return dateDesc(a.due_date, b.due_date);
+      case "atraso_desc": return daysOverdue(b.due_date) - daysOverdue(a.due_date);
+      case "atraso_asc": return daysOverdue(a.due_date) - daysOverdue(b.due_date);
+      case "monto_desc": return Number(b.amount_due) - Number(a.amount_due);
+      case "monto_asc": return Number(a.amount_due) - Number(b.amount_due);
+      case "pago_desc": return dateDesc(a.paid_date, b.paid_date);
+      case "pago_asc": return dateAsc(a.paid_date, b.paid_date);
+      case "estado": return (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9);
+      default: return dateAsc(a.due_date, b.due_date);
+    }
+  });
 
   return (
     <>
@@ -121,17 +150,23 @@ export default async function CobrosPage(props: {
         </div>
       )}
 
+      {payments.length > 0 && (
+        <div className="mb-4">
+          <SortSelect options={OPTS} current={orden} />
+        </div>
+      )}
+
       {payments.length === 0 ? (
         <EmptyState
           icon={Banknote}
           title="Sin pagos en este filtro"
-          description="Cuando tengas contratos activos, cada mes aparecerá aquí la renta de cada inquilino, con su estado y recibo."
+          description="Cuando tengas contratos activos, cada mes aparecerá aquí la renta de cada arrendatario, con su estado y recibo."
         />
       ) : (
         <div className="space-y-3">
           {payments.map((p) => {
             const tenantName =
-              p.lease?.tenant?.full_name ?? p.lease?.tenant?.email ?? "Inquilino";
+              p.lease?.tenant?.full_name ?? p.lease?.tenant?.email ?? "Arrendatario";
             const unitLabel = [p.lease?.unit?.property?.name, p.lease?.unit?.label]
               .filter(Boolean)
               .join(" · ");
@@ -147,7 +182,7 @@ export default async function CobrosPage(props: {
                         {PAYMENT_STATUS_LABELS[p.status]}
                       </Badge>
                       {pendingConfirm && (
-                        <Badge variant="outline">Marcado por el inquilino</Badge>
+                        <Badge variant="outline">Marcado por el arrendatario</Badge>
                       )}
                       {p.status === "paid" && (
                         <Badge
@@ -175,7 +210,7 @@ export default async function CobrosPage(props: {
                     </p>
                     {pendingConfirm && p.tenant_reference && (
                       <p className="text-muted-foreground text-xs">
-                        Clave SPEI del inquilino:{" "}
+                        Clave SPEI del arrendatario:{" "}
                         <span className="font-mono">{p.tenant_reference}</span>
                       </p>
                     )}

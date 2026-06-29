@@ -50,7 +50,7 @@ export async function runReminderSweep(): Promise<{ sent: number; scanned: numbe
 
 /**
  * Recordatorios de RENOVACIÓN de contrato: 3 meses / 1 mes / 15 días antes de
- * que venza (leases.end_date). Avisa al inquilino y al dueño/staff de la org.
+ * que venza (leases.end_date). Avisa al arrendatario y al dueño/staff de la org.
  * Igual que arriba, coincidencia por día exacto => sin duplicados en un cron diario.
  */
 const RENEWAL_CADENCE: Record<number, string> = { 90: "90d", 30: "30d", 15: "15d" };
@@ -114,7 +114,7 @@ export async function runRenewalReminderSweep(): Promise<{ sent: number }> {
       await notify({
         to: email,
         template: "renewal_reminder",
-        data: { ...base, audience: "staff", tenant: lease.tenant?.full_name ?? lease.tenant?.email ?? "Inquilino" },
+        data: { ...base, audience: "staff", tenant: lease.tenant?.full_name ?? lease.tenant?.email ?? "Arrendatario" },
       });
       sent += 1;
     }
@@ -176,7 +176,7 @@ export async function runPolizaReminderSweep(): Promise<{ sent: number }> {
         template: "poliza_reminder",
         data: {
           unit,
-          tenant: lease.tenant?.full_name ?? lease.tenant?.email ?? "Inquilino",
+          tenant: lease.tenant?.full_name ?? lease.tenant?.email ?? "Arrendatario",
           fecha: formatDate(l.poliza_vigencia as string),
         },
       });

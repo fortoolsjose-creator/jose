@@ -3,7 +3,7 @@ import { createClient } from "@/app/_lib/supabase/server";
 import { currentPeriod } from "@/app/_lib/data/finance";
 
 export const IVA_RATE = 0.16; // IVA en arrendamiento comercial
-export const RET_RATE = 0.1; // retención de ISR por inquilinos persona moral
+export const RET_RATE = 0.1; // retención de ISR por arrendatarios persona moral
 
 export type BuildingProfit = {
   property_id: string;
@@ -87,7 +87,7 @@ export async function getPatrimonio(): Promise<Patrimonio> {
  * Per-building profitability. NOI = renta esperada (contratos activos) − gastos
  * del periodo asignados a ese edificio. Cap rate = NOI anualizado / valor de
  * mercado. Fiscal: lo comercial causa IVA 16%; lo residencial es exento; los
- * inquilinos empresa de unidades comerciales retienen 10% de ISR.
+ * arrendatarios empresa de unidades comerciales retienen 10% de ISR.
  * (Estimaciones — confírmalo con contador.)
  */
 export async function getProfitability(
@@ -142,7 +142,7 @@ export async function getProfitability(
     } else {
       b.ingresoResidencial += rent;
     }
-    // Retención de ISR: aplica al arrendamiento comercial con inquilino empresa
+    // Retención de ISR: aplica al arrendamiento comercial con arrendatario empresa
     // (consistente con el IVA, que también es solo comercial).
     if (l.tenant_is_company && unit?.use_type === "commercial") {
       b.retencionEstimada += rent * RET_RATE;

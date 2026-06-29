@@ -15,7 +15,7 @@ export type DocRow = {
 };
 
 /**
- * Documentos del expediente de un dueño (inquilino/propiedad/unidad/contrato),
+ * Documentos del expediente de un dueño (arrendatario/propiedad/unidad/contrato),
  * con URL firmada lista para descargar. RLS limita a la org del staff; las URLs
  * se firman con el cliente admin (el staff puede leer todo lo de su org).
  */

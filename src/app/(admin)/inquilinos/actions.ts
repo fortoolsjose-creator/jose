@@ -59,7 +59,7 @@ export async function createLease(input: LeaseInput): Promise<LeaseResult> {
       user_metadata: { full_name: d.tenant_full_name },
     });
     if (cErr || !created?.user) {
-      return { error: "No se pudo crear el inquilino (¿el correo ya está en uso?)." };
+      return { error: "No se pudo crear el arrendatario (¿el correo ya está en uso?)." };
     }
     tenantId = created.user.id;
     const { error: pErr } = await admin.from("profiles").insert({
@@ -70,7 +70,7 @@ export async function createLease(input: LeaseInput): Promise<LeaseResult> {
       email,
       phone,
     });
-    if (pErr) return { error: "No se pudo crear el perfil del inquilino." };
+    if (pErr) return { error: "No se pudo crear el perfil del arrendatario." };
   }
 
   const { error: lErr } = await admin.from("leases").insert({
@@ -215,7 +215,7 @@ export async function setActaPath(
   return { ok: true };
 }
 
-/** Guarda los datos fiscales del inquilino (para facturar). */
+/** Guarda los datos fiscales del arrendatario (para facturar). */
 export async function setTenantFiscal(
   profileId: string,
   input: {
@@ -234,7 +234,7 @@ export async function setTenantFiscal(
     .select("id, org_id")
     .eq("id", profileId)
     .maybeSingle();
-  if (!target || target.org_id !== profile.org_id) return { error: "Inquilino no válido." };
+  if (!target || target.org_id !== profile.org_id) return { error: "Arrendatario no válido." };
 
   const { error } = await admin
     .from("profiles")
@@ -351,7 +351,7 @@ export async function generarCartaRenovacion(
   };
   const inpc = desde ? inpcAcumulado(desde) : 0;
   const r = calcRenovacion(l.rent_amount, l.maintenance_fee, inpc, margen);
-  const tenant = l.tenant?.full_name ?? "Inquilino";
+  const tenant = l.tenant?.full_name ?? "Arrendatario";
   const unidad = [l.unit?.property?.name, l.unit?.label].filter(Boolean).join(" ");
 
   const dmy = (d: Date) =>
@@ -409,7 +409,7 @@ export async function generarCartaRenovacion(
   y -= 28;
   page.drawText("Propuesta de renovación de contrato", { x: M, y: y - 13, size: 13, font: bold, color: dark });
   y -= 28;
-  text(`Inquilino: ${tenant}`, { f: bold, gap: 3 });
+  text(`Arrendatario: ${tenant}`, { f: bold, gap: 3 });
   text(`Inmueble: ${unidad}`, { f: bold, gap: 16 });
   text(`Estimado(a) ${tenant}:`, { gap: 8 });
   text(
@@ -444,8 +444,8 @@ export async function generarRequerimientoPago(
   const acc = await getLeaseAccount(leaseId);
   if (!acc) return { error: "Contrato no válido." };
   const { lease, saldo, diasAtraso } = acc;
-  if (saldo <= 0) return { error: "Este inquilino no tiene saldo vencido." };
-  const tenant = lease.tenant?.full_name ?? lease.tenant?.email ?? "Inquilino";
+  if (saldo <= 0) return { error: "Este arrendatario no tiene saldo vencido." };
+  const tenant = lease.tenant?.full_name ?? lease.tenant?.email ?? "Arrendatario";
   const unidad = [lease.unit?.property?.name, lease.unit?.label].filter(Boolean).join(" ");
 
   const { PDFDocument, StandardFonts, rgb } = await import("pdf-lib");
@@ -486,7 +486,7 @@ export async function generarRequerimientoPago(
   y -= 28;
   page.drawText("Requerimiento de pago", { x: M, y: y - 13, size: 13, font: bold, color: dark });
   y -= 28;
-  text(`Inquilino: ${tenant}`, { f: bold, gap: 3 });
+  text(`Arrendatario: ${tenant}`, { f: bold, gap: 3 });
   text(`Inmueble: ${unidad}`, { f: bold, gap: 16 });
   text(`Estimado(a) ${tenant}:`, { gap: 8 });
   text(

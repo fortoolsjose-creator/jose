@@ -183,7 +183,7 @@ export async function addAdminComment(
   });
   if (error) return { error: "No se pudo enviar el comentario." };
 
-  // Avisar al inquilino que hay respuesta (antes solo se le avisaba al cambiar estatus).
+  // Avisar al arrendatario que hay respuesta (antes solo se le avisaba al cambiar estatus).
   try {
     const { data: req } = await supabase
       .from("maintenance_requests")

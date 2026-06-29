@@ -57,7 +57,7 @@ export function FiscalForm({
           checked={req}
           onChange={(e) => setReq(e.target.checked)}
         />
-        Este inquilino <span className="font-medium">requiere factura</span>
+        Este arrendatario <span className="font-medium">requiere factura</span>
       </label>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1.5">

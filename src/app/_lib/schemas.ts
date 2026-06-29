@@ -53,7 +53,7 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 export const leaseSchema = z
   .object({
     unit_id: z.string().uuid("Selecciona una unidad."),
-    tenant_full_name: z.string().trim().min(1, "Escribe el nombre del inquilino."),
+    tenant_full_name: z.string().trim().min(1, "Escribe el nombre del arrendatario."),
     tenant_email: z.string().trim().regex(EMAIL_RE, "Correo no válido."),
     tenant_phone: optionalText,
     start_date: z.string().min(1, "Selecciona la fecha de inicio."),

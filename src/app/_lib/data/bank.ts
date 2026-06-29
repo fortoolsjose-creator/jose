@@ -40,7 +40,7 @@ export async function listBankTransactions(): Promise<BankTx[]> {
       concepto: row.concepto,
       matched_payment_id: row.matched_payment_id,
       matched: pay
-        ? { period: pay.period_month, tenant: pay.lease?.tenant?.full_name ?? pay.lease?.tenant?.email ?? "Inquilino" }
+        ? { period: pay.period_month, tenant: pay.lease?.tenant?.full_name ?? pay.lease?.tenant?.email ?? "Arrendatario" }
         : null,
     };
   });
@@ -74,7 +74,7 @@ export async function listCandidatePayments(): Promise<CandidatePayment[]> {
       return {
         id: p.id as string,
         amount: Number(p.amount_paid),
-        tenant: t?.full_name ?? t?.email ?? "Inquilino",
+        tenant: t?.full_name ?? t?.email ?? "Arrendatario",
         period: p.period_month as string,
       };
     });

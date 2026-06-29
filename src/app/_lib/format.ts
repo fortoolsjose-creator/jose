@@ -5,7 +5,9 @@
 const MXN = new Intl.NumberFormat("es-MX", {
   style: "currency",
   currency: "MXN",
-  minimumFractionDigits: 2,
+  // Muestra decimales solo cuando importan: $14,020 (no $14,020.00), pero $14,020.50 si hay centavos.
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
 });
 
 const DATE_LONG = new Intl.DateTimeFormat("es-MX", {

@@ -121,9 +121,9 @@ export default async function PropertyDetailPage(props: {
               <p className="text-lg font-bold">
                 {property.purchase_price ? formatMXN(property.purchase_price) : "—"}
               </p>
-              {property.purchase_date && (
-                <p className="text-muted-foreground text-xs">{formatDate(property.purchase_date)}</p>
-              )}
+              <p className="text-muted-foreground text-xs">
+                {property.purchase_date ? `Comprado el ${formatDate(property.purchase_date)}` : "Fecha de compra sin capturar"}
+              </p>
             </div>
             <div className="rounded-lg border p-3">
               <p className="text-muted-foreground text-xs">Valor actual</p>
@@ -227,11 +227,13 @@ export default async function PropertyDetailPage(props: {
                   {u.rent_market_avg != null && (
                     <p className="text-muted-foreground mt-1 text-xs">
                       Mercado: {formatMXN(u.rent_market_min ?? 0)} – {formatMXN(u.rent_market_avg)} – {formatMXN(u.rent_market_max ?? 0)}
+                      {u.rent_market_updated_at &&
+                        ` · registrado ${formatDate(u.rent_market_updated_at)}`}
                       {(() => {
                         const cur = u.lease?.rent_amount ?? u.rent_amount;
                         const min = u.rent_market_min ?? 0;
                         return cur > 0 && min > 0 && cur < min ? (
-                          <span className="text-primary font-medium"> · por debajo del mercado</span>
+                          <span className="text-primary font-medium"> · por debajo del mínimo de mercado</span>
                         ) : null;
                       })()}
                     </p>

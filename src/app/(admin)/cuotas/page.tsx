@@ -109,7 +109,7 @@ export default async function CuotasPage() {
         <EmptyState
           icon={CircleDollarSign}
           title="Sin cuotas este mes"
-          description="Define la cuota mensual en el contrato de cada inquilino (Inquilinos → un inquilino → Contrato → «Cuota de mantenimiento»). Aquí aparecerán automáticamente cada mes."
+          description="Define la cuota mensual en el contrato de cada arrendatario (Arrendatarios → un arrendatario → Contrato → «Cuota de mantenimiento»). Aquí aparecerán automáticamente cada mes."
         />
       ) : (
         <>
@@ -122,7 +122,7 @@ export default async function CuotasPage() {
           <div className="space-y-3">
             {fees.map((f) => {
               const tenant =
-                f.lease?.tenant?.full_name ?? f.lease?.tenant?.email ?? "Inquilino";
+                f.lease?.tenant?.full_name ?? f.lease?.tenant?.email ?? "Arrendatario";
               const unit = [f.lease?.unit?.property?.name, f.lease?.unit?.label]
                 .filter(Boolean)
                 .join(" · ");

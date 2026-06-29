@@ -39,7 +39,7 @@ export async function getPaymentReport(): Promise<{
   for (const r of concluidos) {
     const t = (r as unknown as { lease?: { tenant?: { full_name: string | null; email: string | null } } })
       .lease?.tenant;
-    const name = t?.full_name ?? t?.email ?? "Inquilino";
+    const name = t?.full_name ?? t?.email ?? "Arrendatario";
     const e = byTenant.get(name) ?? { tarde: 0, total: 0 };
     e.total += 1;
     const late = !r.due_date || (r.paid_date as string) > r.due_date;
@@ -185,7 +185,7 @@ export async function getCollectionAging(): Promise<Aging> {
   };
 }
 
-// --- Concentración (riesgo): qué inquilino pesa más en el ingreso ---
+// --- Concentración (riesgo): qué arrendatario pesa más en el ingreso ---
 export type Concentration = {
   topTenant: { name: string; monto: number; pct: number } | null;
   totalIngreso: number;
@@ -202,7 +202,7 @@ export async function getConcentration(): Promise<Concentration> {
   let total = 0;
   for (const l of data ?? []) {
     const t = (l as unknown as { tenant?: { full_name: string | null; email: string | null } }).tenant;
-    const name = t?.full_name ?? t?.email ?? "Inquilino";
+    const name = t?.full_name ?? t?.email ?? "Arrendatario";
     const r = Number(l.rent_amount);
     map.set(name, (map.get(name) ?? 0) + r);
     total += r;
@@ -373,7 +373,7 @@ export async function getUpcomingExpirations(days = 90): Promise<Expiration[]> {
     };
     return {
       lease_id: l.id as string,
-      tenant: lease.tenant?.full_name ?? lease.tenant?.email ?? "Inquilino",
+      tenant: lease.tenant?.full_name ?? lease.tenant?.email ?? "Arrendatario",
       unit: [lease.unit?.property?.name, lease.unit?.label].filter(Boolean).join(" · "),
       end_date: l.end_date as string,
       dias: Math.round((Date.parse((l.end_date as string) + "T00:00:00Z") - today) / 86_400_000),
@@ -420,7 +420,7 @@ export async function getCashForecast(months = 6): Promise<ForecastMonth[]> {
   return out;
 }
 
-// --- Top inquilinos por ingreso (concentración) ---
+// --- Top arrendatarios por ingreso (concentración) ---
 export type TenantShare = { name: string; monto: number; pct: number };
 
 export async function getTopTenants(n = 5): Promise<{ tenants: TenantShare[]; total: number }> {
@@ -434,7 +434,7 @@ export async function getTopTenants(n = 5): Promise<{ tenants: TenantShare[]; to
   let total = 0;
   for (const l of data ?? []) {
     const t = (l as unknown as { tenant?: { full_name: string | null; email: string | null } }).tenant;
-    const name = t?.full_name ?? t?.email ?? "Inquilino";
+    const name = t?.full_name ?? t?.email ?? "Arrendatario";
     const amt = Number(l.rent_amount) + Number(l.maintenance_fee ?? 0);
     map.set(name, (map.get(name) ?? 0) + amt);
     total += amt;
@@ -446,7 +446,7 @@ export async function getTopTenants(n = 5): Promise<{ tenants: TenantShare[]; to
   return { tenants, total };
 }
 
-// --- Satisfacción (NPS simple) de los inquilinos tras resolver reportes ---
+// --- Satisfacción (NPS simple) de los arrendatarios tras resolver reportes ---
 export async function getSatisfactionSummary(): Promise<{ avg: number; count: number }> {
   const supabase = await createClient();
   const { data } = await supabase.from("satisfaction_ratings").select("rating");

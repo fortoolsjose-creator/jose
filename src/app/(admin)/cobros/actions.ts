@@ -91,7 +91,7 @@ export async function confirmPayment(
   const status = amountPaid >= Number(p.amount_due) ? "paid" : "partial";
 
   // Desglose fiscal (estimado, base de flujo): IVA 16% en comercial; retención de
-  // ISR 10% cuando el inquilino es persona moral en local comercial. Es informativo.
+  // ISR 10% cuando el arrendatario es persona moral en local comercial. Es informativo.
   const comercial = lease?.unit?.use_type === "commercial";
   const subtotal = Number(p.amount_due);
   const iva = comercial ? round2(subtotal * 0.16) : 0;
@@ -132,7 +132,7 @@ export async function confirmPayment(
     const bytes = await generateReceiptPdf({
       folio: paymentId.slice(0, 8).toUpperCase(),
       orgName: org?.name ?? "Metros Redondos",
-      tenantName: lease?.tenant?.full_name ?? lease?.tenant?.email ?? "Inquilino",
+      tenantName: lease?.tenant?.full_name ?? lease?.tenant?.email ?? "Arrendatario",
       unitLabel: lease?.unit?.label ?? "",
       propertyName: lease?.unit?.property?.name ?? "",
       periodLabel: formatMonth(p.period_month),
@@ -144,7 +144,7 @@ export async function confirmPayment(
       retencionIsr,
     });
 
-    const path = `${profile.org_id}/${lease?.tenant_profile_id ?? "sin-inquilino"}/${paymentId}.pdf`;
+    const path = `${profile.org_id}/${lease?.tenant_profile_id ?? "sin-arrendatario"}/${paymentId}.pdf`;
     const { error: upErr } = await supabase.storage
       .from("receipts")
       .upload(path, Buffer.from(bytes), {

@@ -121,7 +121,7 @@ export async function convertToTenant(
     });
     if (cErr || !created?.user) {
       await admin.from("applications").update({ status: "en_revision" }).eq("id", applicationId);
-      return { error: "No se pudo crear el inquilino (¿el correo ya está en uso?)." };
+      return { error: "No se pudo crear el arrendatario (¿el correo ya está en uso?)." };
     }
     tenantId = created.user.id;
     const { error: pErr } = await admin.from("profiles").insert({
@@ -134,11 +134,11 @@ export async function convertToTenant(
     });
     if (pErr) {
       await admin.from("applications").update({ status: "en_revision" }).eq("id", applicationId);
-      return { error: "No se pudo crear el perfil del inquilino." };
+      return { error: "No se pudo crear el perfil del arrendatario." };
     }
   }
 
-  // Draft (pending) lease — staff activates it from Inquilinos.
+  // Draft (pending) lease — staff activates it from Arrendatarios.
   const { error: lErr } = await admin.from("leases").insert({
     org_id: profile.org_id,
     unit_id: listing.unit_id,

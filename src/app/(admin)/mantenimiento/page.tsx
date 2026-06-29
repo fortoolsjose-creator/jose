@@ -8,6 +8,8 @@ import { getMaintenanceMonth } from "@/app/_lib/data/maintenance-month";
 import { listWorkers } from "@/app/_lib/data/payroll";
 import { PageHeader } from "@/app/_components/page-header";
 import { EmptyState } from "@/app/_components/empty-state";
+import { SortSelect, type SortOption } from "@/app/_components/sort-select";
+import { dateAsc, dateDesc } from "@/app/_lib/sort";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, formatMXN, formatMonth } from "@/app/_lib/format";
@@ -44,12 +46,25 @@ const STATUS_VARIANT: Record<MaintenanceStatus, "default" | "secondary" | "outli
   cancelado: "outline",
 };
 
+const OPTS: SortOption[] = [
+  { value: "prioridad_desc", label: "Prioridad (mayor a menor)" },
+  { value: "prioridad_asc", label: "Prioridad (menor a mayor)" },
+  { value: "tiempo_desc", label: "Tiempo abierto (mayor a menor)" },
+  { value: "tiempo_asc", label: "Tiempo abierto (menor a mayor)" },
+  { value: "costo_desc", label: "Costo (mayor a menor)" },
+  { value: "costo_asc", label: "Costo (menor a mayor)" },
+  { value: "estado", label: "Estado (pendientes primero)" },
+];
+const PRIO: Record<string, number> = { urgente: 0, alta: 1, media: 2, baja: 3 };
+const ST: Record<string, number> = { recibido: 0, en_proceso: 1, resuelto: 2, cancelado: 3 };
+
 export default async function MantenimientoPage(props: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; orden?: string }>;
 }) {
   const sp = await props.searchParams;
   await ensureDuePreventive();
-  const [requests, plans, allProps, mes, workers, units] = await Promise.all([
+  const orden = OPTS.some((o) => o.value === sp.orden) ? sp.orden! : "prioridad_desc";
+  const [requestsRaw, plans, allProps, mes, workers, units] = await Promise.all([
     listRequestsAdmin({ status: sp.status }),
     listPlans(),
     listProperties(),
@@ -57,6 +72,18 @@ export default async function MantenimientoPage(props: {
     listWorkers(),
     listUnitsFlat(),
   ]);
+  const requests = [...requestsRaw].sort((a, b) => {
+    const cost = (r: (typeof requestsRaw)[number]) => Number((r as { cost?: number }).cost ?? 0);
+    switch (orden) {
+      case "prioridad_asc": return (PRIO[b.priority] ?? 9) - (PRIO[a.priority] ?? 9);
+      case "tiempo_desc": return dateAsc(a.created_at, b.created_at);
+      case "tiempo_asc": return dateDesc(a.created_at, b.created_at);
+      case "costo_desc": return cost(b) - cost(a);
+      case "costo_asc": return cost(a) - cost(b);
+      case "estado": return (ST[a.status] ?? 9) - (ST[b.status] ?? 9);
+      default: return (PRIO[a.priority] ?? 9) - (PRIO[b.priority] ?? 9);
+    }
+  });
   const properties = allProps.map((p) => ({ id: p.id, name: p.name }));
   const workerOpts = workers.map((w) => ({ id: w.id, name: w.name }));
 
@@ -166,15 +193,16 @@ export default async function MantenimientoPage(props: {
       </section>
 
       <h2 className="mb-3 text-lg font-semibold">Reportes</h2>
-      <div className="mb-4">
+      <div className="mb-4 flex flex-wrap items-center gap-3">
         <RequestFilters />
+        {requests.length > 0 && <SortSelect options={OPTS} current={orden} />}
       </div>
 
       {requests.length === 0 ? (
         <EmptyState
           icon={Wrench}
           title="Sin reportes"
-          description="Cuando un inquilino reporte un problema (o se genere un preventivo), aparecerá aquí."
+          description="Cuando un arrendatario reporte un problema (o se genere un preventivo), aparecerá aquí."
         />
       ) : (
         <div className="space-y-3">

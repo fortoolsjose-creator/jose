@@ -302,10 +302,10 @@ export default async function ReportesPage({
         </div>
       )}
 
-      {/* Concentración por inquilino (owner) */}
+      {/* Concentración por arrendatario (owner) */}
       {isOwner && topTenants.tenants.length > 0 && (
         <div className="mb-8">
-          <h2 className="mb-3 text-lg font-semibold">Concentración por inquilino</h2>
+          <h2 className="mb-3 text-lg font-semibold">Concentración por arrendatario</h2>
           <Card>
             <CardContent className="space-y-2 py-4">
               {topTenants.tenants.map((t) => (
@@ -325,7 +325,7 @@ export default async function ReportesPage({
                 </div>
               ))}
               <p className="text-muted-foreground pt-1 text-xs">
-                Si un inquilino pasa del 25% de tu ingreso, su salida pega fuerte. Es tu riesgo de
+                Si un arrendatario pasa del 25% de tu ingreso, su salida pega fuerte. Es tu riesgo de
                 concentración (Brive).
               </p>
             </CardContent>
@@ -333,10 +333,10 @@ export default async function ReportesPage({
         </div>
       )}
 
-      {/* Satisfacción del inquilino (owner) */}
+      {/* Satisfacción del arrendatario (owner) */}
       {isOwner && satis.count > 0 && (
         <div className="mb-8">
-          <h2 className="mb-3 text-lg font-semibold">Satisfacción del inquilino</h2>
+          <h2 className="mb-3 text-lg font-semibold">Satisfacción del arrendatario</h2>
           <Card>
             <CardContent className="py-4">
               <p className="text-2xl font-bold">{satis.avg.toFixed(1)} / 5 ⭐</p>
@@ -525,7 +525,7 @@ export default async function ReportesPage({
             <p className="text-muted-foreground truncate text-xs">{topBuilding?.name ?? "—"}</p>
           </CardContent></Card>
           <Card><CardContent className="py-4">
-            <p className="text-muted-foreground text-xs">Inquilino que más pesa</p>
+            <p className="text-muted-foreground text-xs">Arrendatario que más pesa</p>
             <p className={`text-lg font-bold ${conc.topTenant && conc.topTenant.pct > 0.25 ? "text-destructive" : ""}`}>
               {conc.topTenant ? pct(conc.topTenant.pct) : "—"}
             </p>

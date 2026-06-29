@@ -19,7 +19,7 @@ const PROTECTED_PREFIXES = [
   "/mantenimiento",
   "/vacantes",
   "/ajustes",
-  // tenant (inquilino)
+  // tenant (arrendatario)
   "/inicio",
   "/mi-renta",
   "/mis-reportes",

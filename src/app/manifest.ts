@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Metros Redondos — Gestión de rentas",
     short_name: "Metros Redondos",
     description:
-      "Administra tus rentas: inquilinos, pagos, recibos y mantenimiento, en un solo lugar.",
+      "Administra tus rentas: arrendatarios, pagos, recibos y mantenimiento, en un solo lugar.",
     start_url: "/",
     scope: "/",
     display: "standalone",

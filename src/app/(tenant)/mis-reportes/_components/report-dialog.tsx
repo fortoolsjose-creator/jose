@@ -60,7 +60,7 @@ export function ReportDialog({
 
   function onSubmit(values: RequestInput) {
     start(async () => {
-      // Sube la foto (opcional) al bucket privado del inquilino, si hay.
+      // Sube la foto (opcional) al bucket privado del arrendatario, si hay.
       let photoPath: string | null = null;
       if (file) {
         if (file.size > 15 * 1024 * 1024) {

@@ -61,7 +61,7 @@ export function ProspectCard({ p }: { p: ProspectRow }) {
           inviteLink: res.inviteLink,
         });
       } else {
-        toast.success("Convertido. Activa el contrato en Inquilinos.");
+        toast.success("Convertido. Activa el contrato en Arrendatarios.");
       }
     });
 
@@ -137,12 +137,12 @@ export function ProspectCard({ p }: { p: ProspectRow }) {
 
         {p.converted_at ? (
           <p className="text-primary flex items-center gap-1.5 border-t pt-2 text-xs font-medium">
-            <UserCheck className="size-3.5" /> Inquilino creado · activa el contrato en Inquilinos
+            <UserCheck className="size-3.5" /> Arrendatario creado · activa el contrato en Arrendatarios
           </p>
         ) : (
           p.stage === "cliente" && (
             <Button size="sm" className="w-full" disabled={pending} onClick={convert}>
-              <UserPlus className="size-4" /> Convertir en inquilino
+              <UserPlus className="size-4" /> Convertir en arrendatario
             </Button>
           )
         )}
@@ -164,9 +164,9 @@ export function ProspectCard({ p }: { p: ProspectRow }) {
       <Dialog open={!!creds} onOpenChange={(o) => !o && setCreds(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Inquilino creado</DialogTitle>
+            <DialogTitle>Arrendatario creado</DialogTitle>
             <DialogDescription>
-              Se creó el inquilino y un contrato borrador. Actívalo en Inquilinos.
+              Se creó el arrendatario y un contrato borrador. Actívalo en Arrendatarios.
               Comparte estos datos para que entre:
             </DialogDescription>
           </DialogHeader>

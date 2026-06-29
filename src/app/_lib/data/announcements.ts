@@ -18,7 +18,7 @@ export async function listAnnouncements(): Promise<AnnouncementRow[]> {
   });
 }
 
-/** Avisos vigentes para el inquilino (RLS lo limita a su org). */
+/** Avisos vigentes para el arrendatario (RLS lo limita a su org). */
 export async function listActiveAnnouncements(): Promise<Announcement[]> {
   const supabase = await createClient();
   const today = new Date().toISOString().slice(0, 10);

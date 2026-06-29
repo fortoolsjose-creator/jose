@@ -2,7 +2,7 @@ import "server-only";
 import type { createAdminClient } from "@/app/_lib/supabase/admin";
 
 /**
- * Genera un enlace mágico de un solo uso para que el inquilino entre sin
+ * Genera un enlace mágico de un solo uso para que el arrendatario entre sin
  * contraseña. No envía correo (Resend aún sin dominio); el staff lo copia y se
  * lo comparte por WhatsApp. Devuelve null si algo falla (best-effort).
  */

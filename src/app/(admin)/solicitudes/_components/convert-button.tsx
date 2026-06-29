@@ -47,7 +47,7 @@ export function ConvertButton({
         });
         setOpen(true);
       } else {
-        toast.success("Convertido. Activa el contrato en Inquilinos.");
+        toast.success("Convertido. Activa el contrato en Arrendatarios.");
       }
     });
   }
@@ -55,14 +55,14 @@ export function ConvertButton({
   return (
     <>
       <Button size="sm" disabled={pending || disabled} onClick={convert}>
-        <UserPlus className="size-4" /> Convertir en inquilino
+        <UserPlus className="size-4" /> Convertir en arrendatario
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Inquilino creado</DialogTitle>
+            <DialogTitle>Arrendatario creado</DialogTitle>
             <DialogDescription>
-              Se creó el inquilino y un contrato borrador. Actívalo en Inquilinos.
+              Se creó el arrendatario y un contrato borrador. Actívalo en Arrendatarios.
               Comparte estos datos para que entre:
             </DialogDescription>
           </DialogHeader>

@@ -99,7 +99,7 @@ export async function getTenantPayments(): Promise<Payment[]> {
   return (data ?? []) as Payment[];
 }
 
-/** Historial de renovaciones/incrementos del contrato del inquilino (RLS scopes). */
+/** Historial de renovaciones/incrementos del contrato del arrendatario (RLS scopes). */
 export async function getTenantRenewals(): Promise<LeaseRenewal[]> {
   const supabase = await createClient();
   const { data } = await supabase
@@ -117,7 +117,7 @@ export type TenantAccount = {
 };
 
 /**
- * Resumen de cuenta del inquilino derivado de sus pagos (sin consultas extra):
+ * Resumen de cuenta del arrendatario derivado de sus pagos (sin consultas extra):
  * saldo total, meses pendientes desglosados, y racha de meses al corriente.
  * Espera `payments` ordenados del más reciente al más antiguo.
  */

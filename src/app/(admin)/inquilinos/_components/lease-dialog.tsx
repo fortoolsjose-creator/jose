@@ -109,7 +109,7 @@ export function LeaseDialog({ vacantUnits }: { vacantUnits: VacantUnit[] }) {
         {created ? (
           <>
             <DialogHeader>
-              <DialogTitle>Inquilino invitado</DialogTitle>
+              <DialogTitle>Arrendatario invitado</DialogTitle>
               <DialogDescription>
                 Comparte estos datos para que entre. También puede usar
                 «¿Olvidaste tu contraseña?» con su correo.
@@ -172,7 +172,7 @@ export function LeaseDialog({ vacantUnits }: { vacantUnits: VacantUnit[] }) {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="tenant_full_name">Nombre del inquilino</Label>
+                <Label htmlFor="tenant_full_name">Nombre del arrendatario</Label>
                 <Input id="tenant_full_name" {...register("tenant_full_name")} />
                 {errors.tenant_full_name && (
                   <p className="text-destructive text-xs">
@@ -244,7 +244,7 @@ export function LeaseDialog({ vacantUnits }: { vacantUnits: VacantUnit[] }) {
               </label>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" {...register("tenant_is_company")} className="size-4" />
-                El inquilino es empresa (le retienen 10% de ISR)
+                El arrendatario es empresa (le retienen 10% de ISR)
               </label>
 
               <DialogFooter>
