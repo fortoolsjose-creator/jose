@@ -73,7 +73,7 @@ export default async function MantenimientoPage(props: {
     listUnitsFlat(),
   ]);
   const requests = [...requestsRaw].sort((a, b) => {
-    const cost = (r: (typeof requestsRaw)[number]) => Number((r as { cost?: number }).cost ?? 0);
+    const cost = (r: (typeof requestsRaw)[number]) => Number(r.cost ?? 0);
     switch (orden) {
       case "prioridad_asc": return (PRIO[b.priority] ?? 9) - (PRIO[a.priority] ?? 9);
       case "tiempo_desc": return dateAsc(a.created_at, b.created_at);

@@ -338,7 +338,7 @@ export async function generarCartaRenovacion(
   const { data: lease } = await admin
     .from("leases")
     .select(
-      "org_id, rent_amount, maintenance_fee, parking_fee, end_date, unit:units(label, property:properties(name)), tenant:profiles(full_name)",
+      "org_id, rent_amount, maintenance_fee, parking_fee, furniture_fee, end_date, unit:units(label, property:properties(name)), tenant:profiles(full_name)",
     )
     .eq("id", leaseId)
     .maybeSingle();
@@ -348,19 +348,24 @@ export async function generarCartaRenovacion(
     rent_amount: number;
     maintenance_fee: number;
     parking_fee: number | null;
+    furniture_fee: number | null;
     end_date: string | null;
     unit?: { label: string; property?: { name: string } | null } | null;
     tenant?: { full_name: string | null } | null;
   };
+  // Defensivo: la acción server no debe confiar en el cliente (margen fuera de rango/NaN).
+  const margenN = Number.isFinite(margen) ? Math.max(0, Math.min(100, margen)) : 0;
   const inpc = desde ? inpcAcumulado(desde) : 0;
-  const r = calcRenovacion(l.rent_amount, l.maintenance_fee, inpc, margen);
+  const r = calcRenovacion(l.rent_amount, l.maintenance_fee, inpc, margenN);
   const factor = 1 + r.aumentoPct / 100;
   const parking = Number(l.parking_fee ?? 0);
+  const furniture = Number(l.furniture_fee ?? 0);
   const nuevoEstac = Math.round(parking * factor);
+  const nuevoMuebles = Math.round(furniture * factor);
   // La cuota la puede fijar el condominio en un monto distinto al INPC.
   const nuevaCuotaEff = cuotaOverride && cuotaOverride > 0 ? Math.round(cuotaOverride) : r.nuevaCuota;
-  const totalActual = l.rent_amount + l.maintenance_fee + parking;
-  const totalNuevo = r.nuevaRenta + nuevaCuotaEff + nuevoEstac;
+  const totalActual = l.rent_amount + l.maintenance_fee + parking + furniture;
+  const totalNuevo = r.nuevaRenta + nuevaCuotaEff + nuevoEstac + nuevoMuebles;
   const tenant = l.tenant?.full_name ?? "Arrendatario";
   const unidad = [l.unit?.property?.name, l.unit?.label].filter(Boolean).join(" ");
 
@@ -423,7 +428,7 @@ export async function generarCartaRenovacion(
   text(`Inmueble: ${unidad}`, { f: bold, gap: 16 });
   text(`Estimado(a) ${tenant}:`, { gap: 8 });
   text(
-    `Por medio de la presente le comunicamos la renovación de su contrato de arrendamiento correspondiente a ${unidad}. Conforme a la cláusula de actualización anual del contrato y al Índice Nacional de Precios al Consumidor (INPC) publicado por el Banco de México, el ajuste para el nuevo periodo es de ${r.aumentoPct.toFixed(2)}% (INPC acumulado ${inpc.toFixed(2)}% más un margen de ${margen}%). Este ajuste es de aplicación obligatoria conforme a lo pactado en el contrato.`,
+    `Por medio de la presente le comunicamos la renovación de su contrato de arrendamiento correspondiente a ${unidad}. Conforme a la cláusula de actualización anual del contrato y al Índice Nacional de Precios al Consumidor (INPC) publicado por el Banco de México, el ajuste para el nuevo periodo es de ${r.aumentoPct.toFixed(2)}% (INPC acumulado ${inpc.toFixed(2)}% más un margen de ${margenN}%). Este ajuste es de aplicación obligatoria conforme a lo pactado en el contrato.`,
     { gap: 6 },
   );
   y -= 12;
@@ -434,10 +439,11 @@ export async function generarCartaRenovacion(
   trow("Renta", formatMXN(l.rent_amount), formatMXN(r.nuevaRenta));
   trow("Mantenimiento", formatMXN(l.maintenance_fee), formatMXN(nuevaCuotaEff));
   if (parking > 0) trow("Estacionamiento", formatMXN(parking), formatMXN(nuevoEstac));
+  if (furniture > 0) trow("Muebles", formatMXN(furniture), formatMXN(nuevoMuebles));
   trow("Total mensual", formatMXN(totalActual), formatMXN(totalNuevo));
   y -= 14;
   if (vig) text(`Vigencia: ${vig}.`, { gap: 6 });
-  if (deadlineDate) {
+  if (deadlineDate && !Number.isNaN(Date.parse(deadlineDate + "T00:00:00Z"))) {
     const dl = new Date(deadlineDate + "T00:00:00Z");
     text(
       `Le solicitamos confirmar de recibido a más tardar el ${dmy(dl)}. De no recibir respuesta en esa fecha, el ajuste se aplicará automáticamente conforme a lo aquí indicado.`,

@@ -17,6 +17,7 @@ export type RequestListItem = {
   status: MaintenanceStatus;
   mtype: MaintenanceType;
   created_at: string;
+  cost: number | null;
   unit: { label: string; property: { name: string } | null } | null;
   created_by_profile: { full_name: string | null; email: string | null } | null;
 };
@@ -43,7 +44,7 @@ export async function listRequestsAdmin(opts: {
   let q = supabase
     .from("maintenance_requests")
     .select(
-      "id, title, category, priority, status, mtype, created_at, unit:units(label, property:properties(name)), created_by_profile:profiles!maintenance_requests_created_by_fkey(full_name, email)",
+      "id, title, category, priority, status, mtype, created_at, cost, unit:units(label, property:properties(name)), created_by_profile:profiles!maintenance_requests_created_by_fkey(full_name, email)",
     )
     .is("deleted_at", null);
   if (opts.status) q = q.eq("status", opts.status);
