@@ -68,6 +68,10 @@ export default async function EstadoDeCuentaPage(props: {
     ? await listDocuments("profile", lease.tenant_profile_id)
     : [];
   const tenant = lease.tenant?.full_name ?? lease.tenant?.email ?? "Arrendatario";
+  // Método de pago "habitual": el más frecuente en sus pagos (sin columna extra).
+  const metodoCounts: Record<string, number> = {};
+  for (const p of payments) if (p.method) metodoCounts[p.method] = (metodoCounts[p.method] ?? 0) + 1;
+  const metodoPago = Object.entries(metodoCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -97,6 +101,16 @@ export default async function EstadoDeCuentaPage(props: {
             <p>{[lease.tenant?.email, lease.tenant?.phone].filter(Boolean).join(" · ")}</p>
           </div>
         )}
+        <div className="text-sm">
+          <p className="text-muted-foreground text-xs">Forma de pago</p>
+          <p>
+            {metodoPago
+              ? PAYMENT_METHOD_LABELS[metodoPago as keyof typeof PAYMENT_METHOD_LABELS]
+              : "Sin registro"}
+            {" · "}
+            {lease.tenant?.requiere_factura ? "Con factura" : "Sin factura"}
+          </p>
+        </div>
         <div className="w-48">
           <p className="text-muted-foreground mb-1 text-xs">Estado del contrato</p>
           <LeaseStatusControl leaseId={id} status={lease.status as LeaseStatus} />

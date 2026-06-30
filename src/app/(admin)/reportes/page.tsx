@@ -534,20 +534,6 @@ export default async function ReportesPage({
         </div>
       </Section>
 
-      {/* Fiscal */}
-      <Section title="Fiscal (estimado)" subtitle="Para tu contador — estimaciones, confírmalas.">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Card><CardContent className="py-4">
-            <p className="text-muted-foreground text-xs">IVA por cobrar (16% de lo comercial)</p>
-            <p className="text-lg font-bold">{formatMXN(totals.ivaEstimado)}</p>
-          </CardContent></Card>
-          <Card><CardContent className="py-4">
-            <p className="text-muted-foreground text-xs">Retención que te hacen (10%)</p>
-            <p className="text-lg font-bold">{formatMXN(totals.retencionEstimada)}</p>
-          </CardContent></Card>
-        </div>
-      </Section>
-
       <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
         <AlertTriangle className="size-3.5" />
         Precios de mercado del estudio MPM; plusvalía con valor de compra vs precio sugerido. Confirma con la asistente.

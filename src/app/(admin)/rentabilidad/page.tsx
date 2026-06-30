@@ -70,15 +70,6 @@ export default async function RentabilidadPage() {
         dinero que dejas de ganar por unidades vacías o rentadas debajo de su precio.
       </p>
 
-      <div className="bg-muted/40 mb-6 rounded-lg border p-3 text-sm">
-        <p className="mb-1 font-medium">Fiscal (estimado)</p>
-        <p className="text-muted-foreground">
-          IVA por cobrar (16% de lo comercial): {formatMXN(totals.ivaEstimado)} ·
-          Retención que te hacen las empresas (10%): {formatMXN(totals.retencionEstimada)}.
-          Lo residencial está exento de IVA. Son estimaciones — confírmalo con tu contador.
-        </p>
-      </div>
-
       <h2 className="mb-3 text-lg font-semibold">Por edificio</h2>
       {buildings.length === 0 ? (
         <EmptyState

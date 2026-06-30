@@ -64,25 +64,6 @@ export async function generateReceiptPdf(d: ReceiptData): Promise<Uint8Array> {
   row("Metodo de pago", d.methodLabel);
   row("Fecha de pago", d.paidDateLabel);
 
-  // Desglose fiscal (estimado) — solo si hay IVA (arrendamiento comercial).
-  if (d.iva && d.iva > 0) {
-    y -= 6;
-    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 1, color: line });
-    y -= 22;
-    draw("Desglose fiscal (estimado)", margin, y, bold, 10, muted);
-    y -= 20;
-    const drow = (label: string, value: string) => {
-      draw(label, margin, y, font, 10, muted);
-      draw(value, width - margin - 130, y, font, 11);
-      y -= 18;
-    };
-    drow("Subtotal", mxn.format(d.subtotal ?? 0));
-    drow("IVA 16%", mxn.format(d.iva));
-    if (d.retencionIsr && d.retencionIsr > 0) {
-      drow("Retencion ISR 10%", `- ${mxn.format(d.retencionIsr)}`);
-    }
-  }
-
   y -= 6;
   page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 1, color: line });
   y -= 32;

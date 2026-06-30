@@ -193,7 +193,7 @@ export default async function MantenimientoPage(props: {
       </section>
 
       <h2 className="mb-3 text-lg font-semibold">Reportes</h2>
-      <div className="mb-4 flex flex-wrap items-center gap-3">
+      <div className="mb-4 space-y-3">
         <RequestFilters />
         {requests.length > 0 && <SortSelect options={OPTS} current={orden} />}
       </div>
