@@ -164,9 +164,8 @@ export async function confirmPayment(
       amount: d.amount,
       methodLabel: PAYMENT_METHOD_LABELS[d.method],
       paidDateLabel: formatDate(d.paid_date),
-      subtotal,
-      iva,
-      retencionIsr,
+      // El desglose fiscal solo va en el recibo si el pago se facturó.
+      ...(d.fiscal_status === "con_factura" ? { subtotal, iva, retencionIsr } : {}),
     });
 
     const path = `${profile.org_id}/${lease?.tenant_profile_id ?? "sin-arrendatario"}/${paymentId}.pdf`;

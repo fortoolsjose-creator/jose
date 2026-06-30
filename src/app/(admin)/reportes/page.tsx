@@ -16,6 +16,7 @@ import {
   getCashForecast,
   getTopTenants,
   getSatisfactionSummary,
+  getFiscalReport,
 } from "@/app/_lib/data/reports";
 import { PageHeader } from "@/app/_components/page-header";
 import { ExportButton } from "./_components/export-button";
@@ -69,9 +70,14 @@ export default async function ReportesPage({
   const gastosPct = prevExp.total > 0 ? gastosDelta / prevExp.total : null;
   const profile = await getProfile();
   const isOwner = profile?.role === "owner";
-  const [forecast, topTenants, satis] = isOwner
-    ? await Promise.all([getCashForecast(6), getTopTenants(5), getSatisfactionSummary()])
-    : [[], { tenants: [], total: 0 }, { avg: 0, count: 0 }];
+  const [forecast, topTenants, satis, fiscal] = isOwner
+    ? await Promise.all([
+        getCashForecast(6),
+        getTopTenants(5),
+        getSatisfactionSummary(),
+        getFiscalReport(period0),
+      ])
+    : [[], { tenants: [], total: 0 }, { avg: 0, count: 0 }, { facturado: 0, iva: 0, retencion: 0, n: 0 }];
   const forecastMax = Math.max(1, ...forecast.map((m) => m.esperado + m.enRiesgo));
   const trendMax = Math.max(1, ...trend.map((m) => m.facturado));
   const expenseRatio = totals.ingresoEsperado > 0 ? totals.gastos / totals.ingresoEsperado : 0;
@@ -537,6 +543,28 @@ export default async function ReportesPage({
           </CardContent></Card>
         </div>
       </Section>
+
+      {isOwner && fiscal.n > 0 && (
+        <Section
+          title="Fiscal (facturado)"
+          subtitle="Solo sobre los pagos que sí se facturaron — no incluye efectivo / sin factura."
+        >
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Card><CardContent className="py-4">
+              <p className="text-muted-foreground text-xs">Facturado ({fiscal.n} pagos)</p>
+              <p className="text-lg font-bold">{formatMXN(fiscal.facturado)}</p>
+            </CardContent></Card>
+            <Card><CardContent className="py-4">
+              <p className="text-muted-foreground text-xs">IVA facturado (16%)</p>
+              <p className="text-lg font-bold">{formatMXN(fiscal.iva)}</p>
+            </CardContent></Card>
+            <Card><CardContent className="py-4">
+              <p className="text-muted-foreground text-xs">Retención ISR (10%)</p>
+              <p className="text-lg font-bold">{formatMXN(fiscal.retencion)}</p>
+            </CardContent></Card>
+          </div>
+        </Section>
+      )}
 
       <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
         <AlertTriangle className="size-3.5" />

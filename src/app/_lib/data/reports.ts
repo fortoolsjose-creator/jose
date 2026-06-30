@@ -78,6 +78,33 @@ export async function getPaymentReport(period?: string): Promise<{
   };
 }
 
+/**
+ * Fiscal REAL (no estimado): suma IVA y retención SOLO de los pagos que de verdad
+ * se facturaron (fiscal_status = con_factura). Los pagos en efectivo / sin factura
+ * no cuentan. Filtra por período si se pasa.
+ */
+export async function getFiscalReport(
+  period?: string,
+): Promise<{ facturado: number; iva: number; retencion: number; n: number }> {
+  const supabase = await createClient();
+  let q = supabase
+    .from("payments")
+    .select("subtotal, iva, retencion_isr, period_month")
+    .is("deleted_at", null)
+    .eq("fiscal_status", "con_factura");
+  if (period) q = q.eq("period_month", period);
+  const { data } = await q;
+  let facturado = 0;
+  let iva = 0;
+  let retencion = 0;
+  for (const r of data ?? []) {
+    facturado += Number(r.subtotal ?? 0);
+    iva += Number(r.iva ?? 0);
+    retencion += Number(r.retencion_isr ?? 0);
+  }
+  return { facturado, iva, retencion, n: (data ?? []).length };
+}
+
 export type ExpenseByCategory = {
   category: ExpenseCategory;
   total: number;
