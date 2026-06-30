@@ -329,6 +329,8 @@ export async function generarCartaRenovacion(
   leaseId: string,
   desde: string,
   margen: number,
+  deadlineDate?: string,
+  cuotaOverride?: number,
 ): Promise<{ pdf?: string; filename?: string; error?: string }> {
   const profile = await getProfile();
   if (!profile || profile.role === "tenant") return { error: "No autorizado." };
@@ -336,7 +338,7 @@ export async function generarCartaRenovacion(
   const { data: lease } = await admin
     .from("leases")
     .select(
-      "org_id, rent_amount, maintenance_fee, end_date, unit:units(label, property:properties(name)), tenant:profiles(full_name)",
+      "org_id, rent_amount, maintenance_fee, parking_fee, end_date, unit:units(label, property:properties(name)), tenant:profiles(full_name)",
     )
     .eq("id", leaseId)
     .maybeSingle();
@@ -345,12 +347,20 @@ export async function generarCartaRenovacion(
   const l = lease as unknown as {
     rent_amount: number;
     maintenance_fee: number;
+    parking_fee: number | null;
     end_date: string | null;
     unit?: { label: string; property?: { name: string } | null } | null;
     tenant?: { full_name: string | null } | null;
   };
   const inpc = desde ? inpcAcumulado(desde) : 0;
   const r = calcRenovacion(l.rent_amount, l.maintenance_fee, inpc, margen);
+  const factor = 1 + r.aumentoPct / 100;
+  const parking = Number(l.parking_fee ?? 0);
+  const nuevoEstac = Math.round(parking * factor);
+  // La cuota la puede fijar el condominio en un monto distinto al INPC.
+  const nuevaCuotaEff = cuotaOverride && cuotaOverride > 0 ? Math.round(cuotaOverride) : r.nuevaCuota;
+  const totalActual = l.rent_amount + l.maintenance_fee + parking;
+  const totalNuevo = r.nuevaRenta + nuevaCuotaEff + nuevoEstac;
   const tenant = l.tenant?.full_name ?? "Arrendatario";
   const unidad = [l.unit?.property?.name, l.unit?.label].filter(Boolean).join(" ");
 
@@ -407,25 +417,35 @@ export async function generarCartaRenovacion(
   y -= 22;
   page.drawText(fechaTxt, { x: M, y: y - 10, size: 10, font, color: gray });
   y -= 28;
-  page.drawText("Propuesta de renovación de contrato", { x: M, y: y - 13, size: 13, font: bold, color: dark });
+  page.drawText("Aviso de renovación de contrato", { x: M, y: y - 13, size: 13, font: bold, color: dark });
   y -= 28;
   text(`Arrendatario: ${tenant}`, { f: bold, gap: 3 });
   text(`Inmueble: ${unidad}`, { f: bold, gap: 16 });
   text(`Estimado(a) ${tenant}:`, { gap: 8 });
   text(
-    `Por medio de la presente le proponemos la renovación de su contrato de arrendamiento correspondiente a ${unidad}. Conforme a la cláusula de actualización anual y al Índice Nacional de Precios al Consumidor (INPC) publicado por el Banco de México, el ajuste para el nuevo periodo es de ${r.aumentoPct.toFixed(2)}% (INPC acumulado ${inpc.toFixed(2)}% más un margen de ${margen}%).`,
+    `Por medio de la presente le comunicamos la renovación de su contrato de arrendamiento correspondiente a ${unidad}. Conforme a la cláusula de actualización anual del contrato y al Índice Nacional de Precios al Consumidor (INPC) publicado por el Banco de México, el ajuste para el nuevo periodo es de ${r.aumentoPct.toFixed(2)}% (INPC acumulado ${inpc.toFixed(2)}% más un margen de ${margen}%). Este ajuste es de aplicación obligatoria conforme a lo pactado en el contrato.`,
     { gap: 6 },
   );
   y -= 12;
   page.drawText("Concepto", { x: M, y: y - 10, size: 10, font: bold, color: gray });
   page.drawText("Actual", { x: M + 210, y: y - 10, size: 10, font: bold, color: gray });
-  page.drawText("Propuesto", { x: M + 350, y: y - 10, size: 10, font: bold, color: gray });
+  page.drawText("Nuevo", { x: M + 350, y: y - 10, size: 10, font: bold, color: gray });
   y -= 18;
   trow("Renta", formatMXN(l.rent_amount), formatMXN(r.nuevaRenta));
-  trow("Mantenimiento", formatMXN(l.maintenance_fee), formatMXN(r.nuevaCuota));
-  trow("Total mensual", formatMXN(l.rent_amount + l.maintenance_fee), formatMXN(r.nuevoTotal));
+  trow("Mantenimiento", formatMXN(l.maintenance_fee), formatMXN(nuevaCuotaEff));
+  if (parking > 0) trow("Estacionamiento", formatMXN(parking), formatMXN(nuevoEstac));
+  trow("Total mensual", formatMXN(totalActual), formatMXN(totalNuevo));
   y -= 14;
-  if (vig) text(`Vigencia propuesta: ${vig}.`, { gap: 16 });
+  if (vig) text(`Vigencia: ${vig}.`, { gap: 6 });
+  if (deadlineDate) {
+    const dl = new Date(deadlineDate + "T00:00:00Z");
+    text(
+      `Le solicitamos confirmar de recibido a más tardar el ${dmy(dl)}. De no recibir respuesta en esa fecha, el ajuste se aplicará automáticamente conforme a lo aquí indicado.`,
+      { gap: 16 },
+    );
+  } else {
+    y -= 10;
+  }
   text("Quedamos a sus órdenes para cualquier aclaración y agradecemos su preferencia.", { gap: 26 });
   text("Atentamente,", { gap: 3 });
   text("Metros Redondos · Administración", { f: bold });

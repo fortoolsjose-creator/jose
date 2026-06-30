@@ -17,17 +17,19 @@ export type Facturacion = {
 };
 
 /** Reporte de pagos: puntualidad (a tiempo vs tarde) y facturación (con/sin/pendiente). */
-export async function getPaymentReport(): Promise<{
+export async function getPaymentReport(period?: string): Promise<{
   puntualidad: Punctuality;
   facturacion: Facturacion;
 }> {
   const supabase = await createClient();
-  const { data } = await supabase
+  let q = supabase
     .from("payments")
     .select(
-      "amount_paid, amount_due, due_date, paid_date, status, fiscal_status, lease:leases(tenant:profiles(full_name, email))",
+      "amount_paid, amount_due, due_date, paid_date, status, fiscal_status, period_month, lease:leases(tenant:profiles(full_name, email))",
     )
     .is("deleted_at", null);
+  if (period) q = q.eq("period_month", period);
+  const { data } = await q;
   const rows = data ?? [];
 
   // Puntualidad: sobre pagos concluidos (con paid_date).

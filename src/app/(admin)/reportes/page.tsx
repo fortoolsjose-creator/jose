@@ -54,7 +54,7 @@ export default async function ReportesPage({
     await Promise.all([
       getProfitability(period0),
       listDebtors(),
-      getPaymentReport(),
+      getPaymentReport(period0),
       getExpenseReport(period0),
       getExpenseReport(prevPeriod),
       getMonthlyTrend(6),

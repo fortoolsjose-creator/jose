@@ -37,11 +37,19 @@ export function RenovacionCalc({
   const [margen, setMargen] = useState("2.5");
   const [objetivoM2, setObjetivoM2] = useState("");
   const [cuotaOverride, setCuotaOverride] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [pending, start] = useTransition();
 
   function generarCarta() {
     start(async () => {
-      const res = await generarCartaRenovacion(leaseId, desde, parseFloat(margen) || 0);
+      const cov = parseFloat(cuotaOverride) || 0;
+      const res = await generarCartaRenovacion(
+        leaseId,
+        desde,
+        parseFloat(margen) || 0,
+        deadline || undefined,
+        cov > 0 ? cov : undefined,
+      );
       if (res.error || !res.pdf) {
         toast.error(res.error ?? "No se pudo generar la carta.");
         return;
@@ -209,9 +217,21 @@ export function RenovacionCalc({
         </div>
       </div>
 
-      <Button size="sm" variant="outline" onClick={generarCarta} disabled={pending}>
-        <FileText className="size-4" /> {pending ? "Generando…" : "Generar carta de renovación (PDF)"}
-      </Button>
+      <div className="flex flex-wrap items-end gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="deadline">Fecha límite para que conteste (opcional)</Label>
+          <Input
+            id="deadline"
+            type="date"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            className="w-44"
+          />
+        </div>
+        <Button size="sm" variant="outline" onClick={generarCarta} disabled={pending}>
+          <FileText className="size-4" /> {pending ? "Generando…" : "Generar carta de renovación (PDF)"}
+        </Button>
+      </div>
 
       <p className="text-muted-foreground text-xs">
         Cálculo con el INPC de Banxico (igual que tu calculadora). Ajusta el mes de “desde” a la
