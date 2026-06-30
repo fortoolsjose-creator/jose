@@ -63,7 +63,35 @@ export type Debtor = {
   unit: string;
   saldoVencido: number;
   diasAtraso: number;
+  moraCalculada: number;
 };
+
+/**
+ * Interés moratorio simple, prorrateado por día: saldo × (tasa%/mes) × (días cobrables / 30),
+ * donde días cobrables = días de atraso − días de gracia. 0 si no hay tasa o sigue en gracia.
+ */
+export function calcMora(
+  saldoVencido: number,
+  diasAtraso: number,
+  tasaMensual: number,
+  diasGracia: number,
+): number {
+  if (tasaMensual <= 0 || saldoVencido <= 0) return 0;
+  const cobrables = diasAtraso - diasGracia;
+  if (cobrables <= 0) return 0;
+  return Math.round(saldoVencido * (tasaMensual / 100) * (cobrables / 30));
+}
+
+/** Config de moratorios de la org (tolerante a que aún no existan las columnas). */
+export async function getMoraConfig(): Promise<{ tasa: number; gracia: number }> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("organizations").select("*").limit(1).maybeSingle();
+  const o = data as Record<string, unknown> | null;
+  return {
+    tasa: Number(o?.["mora_tasa_mensual"] ?? 0),
+    gracia: Number(o?.["mora_dias_gracia"] ?? 0),
+  };
+}
 
 export async function listDebtors(): Promise<Debtor[]> {
   const supabase = await createClient();
@@ -95,14 +123,20 @@ export async function listDebtors(): Promise<Debtor[]> {
     byLease.set(r.lease_id, e);
   }
 
+  const { tasa, gracia } = await getMoraConfig();
+
   return [...byLease.entries()]
-    .map(([lease_id, e]) => ({
-      lease_id,
-      tenant: e.tenant,
-      unit: e.unit,
-      saldoVencido: e.saldo,
-      diasAtraso: daysOverdue(e.oldest),
-    }))
+    .map(([lease_id, e]) => {
+      const diasAtraso = daysOverdue(e.oldest);
+      return {
+        lease_id,
+        tenant: e.tenant,
+        unit: e.unit,
+        saldoVencido: e.saldo,
+        diasAtraso,
+        moraCalculada: calcMora(e.saldo, diasAtraso, tasa, gracia),
+      };
+    })
     .sort((a, b) => b.saldoVencido - a.saldoVencido);
 }
 

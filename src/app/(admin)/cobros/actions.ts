@@ -21,6 +21,31 @@ const confirmSchema = z.object({
   fiscal_status: z.enum(["con_factura", "sin_factura", "pendiente"]).optional(),
 });
 
+const moraSchema = z.object({
+  mora_tasa_mensual: z.coerce.number().min(0).max(100),
+  mora_dias_gracia: z.coerce.number().int().min(0).max(60),
+});
+
+export async function setMoraConfig(input: unknown): Promise<Result> {
+  const profile = await getProfile();
+  if (!profile || profile.role !== "owner")
+    return { error: "Solo el dueño puede configurar el cargo moratorio." };
+  const parsed = moraSchema.safeParse(input);
+  if (!parsed.success) return { error: "Datos no válidos." };
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("organizations")
+    .update({
+      mora_tasa_mensual: parsed.data.mora_tasa_mensual,
+      mora_dias_gracia: parsed.data.mora_dias_gracia,
+    })
+    .eq("id", profile.org_id);
+  if (error) return { error: "No se pudo guardar. ¿Ya corriste el SQL de moratorios en Supabase?" };
+  revalidatePath("/cobros");
+  revalidatePath("/reportes");
+  return { ok: true };
+}
+
 export async function confirmPayment(
   paymentId: string,
   input: unknown,

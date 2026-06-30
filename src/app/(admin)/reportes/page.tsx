@@ -91,6 +91,7 @@ export default async function ReportesPage({
     return b.capRate - a.capRate;
   });
   const carteraTotal = debtors.reduce((s, d) => s + d.saldoVencido, 0);
+  const totalMora = debtors.reduce((s, d) => s + d.moraCalculada, 0);
 
   return (
     <>
@@ -124,6 +125,9 @@ export default async function ReportesPage({
         <Card><CardContent className="py-4">
           <p className="text-muted-foreground text-xs">Cartera vencida</p>
           <p className={`text-lg font-bold ${carteraTotal > 0 ? "text-destructive" : ""}`}>{formatMXN(carteraTotal)}</p>
+          {totalMora > 0 && (
+            <p className="text-muted-foreground text-xs">+ mora estimada {formatMXN(totalMora)}</p>
+          )}
         </CardContent></Card>
         <Card><CardContent className="py-4">
           <p className="text-muted-foreground text-xs">Pagos a tiempo</p>

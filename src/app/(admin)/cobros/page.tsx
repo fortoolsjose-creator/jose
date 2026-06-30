@@ -6,7 +6,8 @@ import {
   listPayments,
   listPaymentMonths,
 } from "@/app/_lib/data/payments";
-import { getCollectionSummary, listDebtors, daysOverdue } from "@/app/_lib/data/finance";
+import { getCollectionSummary, listDebtors, daysOverdue, getMoraConfig } from "@/app/_lib/data/finance";
+import { MoraConfigForm } from "./_components/mora-config-form";
 import { getProfile } from "@/app/_lib/dal";
 import { PageHeader } from "@/app/_components/page-header";
 import { SortSelect, type SortOption } from "@/app/_components/sort-select";
@@ -81,13 +82,15 @@ export default async function CobrosPage(props: {
   const months = monthValues.map((m) => ({ value: m, label: formatMonth(m) }));
   const month = sp.month ?? monthValues[0];
   const orden = OPTS.some((o) => o.value === sp.orden) ? sp.orden! : "vence_asc";
-  const [paymentsRaw, summary, debtors, profile] = await Promise.all([
+  const [paymentsRaw, summary, debtors, profile, moraCfg] = await Promise.all([
     listPayments({ month, status: sp.status }),
     getCollectionSummary(),
     listDebtors(),
     getProfile(),
+    getMoraConfig(),
   ]);
   const orgId = profile?.org_id ?? "";
+  const isOwner = profile?.role === "owner";
   const payments = [...paymentsRaw].sort((a, b) => {
     switch (orden) {
       case "vence_desc": return dateDesc(a.due_date, b.due_date);
@@ -117,6 +120,13 @@ export default async function CobrosPage(props: {
         <SummaryCard label="Cobranza" value={`${Math.round(summary.pctCobranza * 100)}%`} />
       </div>
 
+      {isOwner && (
+        <div className="mb-6">
+          <h2 className="text-muted-foreground mb-2 text-sm font-semibold">Cargo moratorio</h2>
+          <MoraConfigForm tasa={moraCfg.tasa} gracia={moraCfg.gracia} />
+        </div>
+      )}
+
       {debtors.length > 0 && (
         <div className="mb-6">
           <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold">
@@ -135,6 +145,11 @@ export default async function CobrosPage(props: {
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="text-destructive font-semibold">{formatMXN(d.saldoVencido)}</p>
+                      {d.moraCalculada > 0 && (
+                        <p className="text-muted-foreground text-xs">
+                          + mora {formatMXN(d.moraCalculada)}
+                        </p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
