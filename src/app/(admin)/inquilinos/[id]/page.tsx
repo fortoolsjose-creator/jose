@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
-import { getLeaseAccount } from "@/app/_lib/data/finance";
+import { getLeaseAccount, getLeaseExtras } from "@/app/_lib/data/finance";
 import { getProfile } from "@/app/_lib/dal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,8 @@ import { RenovarDialog } from "../_components/renovar-dialog";
 import { ActaUpload } from "../_components/acta-upload";
 import { LeaseDatesEditor } from "../_components/lease-dates-editor";
 import { RenovacionCalc } from "../_components/renovacion-calc";
+import { CuotaEditor } from "../_components/cuota-editor";
+import { RenovacionStatus } from "../_components/renovacion-status";
 import { RequerimientoButton } from "../_components/requerimiento-button";
 import { AbonoList } from "../_components/abono-list";
 
@@ -60,7 +62,11 @@ export default async function EstadoDeCuentaPage(props: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await props.params;
-  const [acc, profile] = await Promise.all([getLeaseAccount(id), getProfile()]);
+  const [acc, profile, extras] = await Promise.all([
+    getLeaseAccount(id),
+    getProfile(),
+    getLeaseExtras(id),
+  ]);
   if (!acc) notFound();
   const orgId = profile?.org_id ?? "";
   const { lease, payments, saldo, pagadoTotal, diasAtraso, abonosByPayment, saldoFavor } = acc;
@@ -211,6 +217,15 @@ export default async function EstadoDeCuentaPage(props: {
           hasVencimiento={!!lease.acta_vencimiento_path}
         />
         <div className="mt-4 border-t pt-4">
+          <h3 className="mb-1 text-sm font-semibold">Cuota de mantenimiento</h3>
+          <p className="text-muted-foreground mb-3 text-sm">
+            Si el condominio la cambia, actualízala aquí con la fecha desde la que aplica.
+            {extras.maintenanceFeeDesde &&
+              ` Vigente desde ${formatDate(extras.maintenanceFeeDesde)}.`}
+          </p>
+          <CuotaEditor leaseId={id} monto={lease.maintenance_fee} desde={extras.maintenanceFeeDesde} />
+        </div>
+        <div className="mt-4 border-t pt-4">
           <h3 className="mb-1 text-sm font-semibold">Calculadora de renovación</h3>
           <p className="text-muted-foreground mb-3 text-sm">
             El aumento se calcula con el INPC de Banxico + el margen que elijas — igual que tu
@@ -226,6 +241,14 @@ export default async function EstadoDeCuentaPage(props: {
             marketAvg={lease.unit?.rent_market_avg ?? null}
             marketMax={lease.unit?.rent_market_max ?? null}
           />
+          <div className="mt-3">
+            <RenovacionStatus
+              leaseId={id}
+              sentAt={extras.renewalSentAt}
+              deadline={extras.renewalDeadline}
+              respondedAt={extras.renewalRespondedAt}
+            />
+          </div>
         </div>
       </div>
 

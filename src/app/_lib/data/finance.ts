@@ -82,6 +82,24 @@ export function calcMora(
   return Math.round(saldoVencido * (tasaMensual / 100) * (cobrables / 30));
 }
 
+/** Campos extra del contrato (cuota-desde, renovación) — tolerante a columnas inexistentes. */
+export async function getLeaseExtras(leaseId: string): Promise<{
+  maintenanceFeeDesde: string | null;
+  renewalDeadline: string | null;
+  renewalSentAt: string | null;
+  renewalRespondedAt: string | null;
+}> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("leases").select("*").eq("id", leaseId).maybeSingle();
+  const o = data as Record<string, unknown> | null;
+  return {
+    maintenanceFeeDesde: (o?.["maintenance_fee_desde"] as string) ?? null,
+    renewalDeadline: (o?.["renewal_deadline"] as string) ?? null,
+    renewalSentAt: (o?.["renewal_sent_at"] as string) ?? null,
+    renewalRespondedAt: (o?.["renewal_responded_at"] as string) ?? null,
+  };
+}
+
 /** Config de moratorios de la org (tolerante a que aún no existan las columnas). */
 export async function getMoraConfig(): Promise<{ tasa: number; gracia: number }> {
   const supabase = await createClient();

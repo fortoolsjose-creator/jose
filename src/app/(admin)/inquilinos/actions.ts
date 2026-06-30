@@ -324,6 +324,26 @@ export async function setDepositPaid(
   return { ok: true };
 }
 
+/** Actualiza la cuota de mantenimiento del contrato y desde cuándo aplica (#4). */
+export async function setCuota(
+  leaseId: string,
+  monto: number,
+  desde: string | null,
+): Promise<{ ok?: true; error?: string }> {
+  const profile = await getProfile();
+  if (!profile || profile.role === "tenant") return { error: "No autorizado." };
+  if (!Number.isFinite(monto) || monto < 0) return { error: "Monto inválido." };
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("leases")
+    .update({ maintenance_fee: Math.round(monto), maintenance_fee_desde: desde || null })
+    .eq("id", leaseId)
+    .eq("org_id", profile.org_id);
+  if (error) return { error: "No se pudo guardar. ¿Ya corriste el SQL de cuotas?" };
+  revalidatePath(`/inquilinos/${leaseId}`);
+  return { ok: true };
+}
+
 /** Genera la carta de propuesta de renovación (PDF) con los valores INPC + margen. */
 export async function generarCartaRenovacion(
   leaseId: string,
@@ -456,10 +476,41 @@ export async function generarCartaRenovacion(
   text("Atentamente,", { gap: 3 });
   text("Metros Redondos · Administración", { f: bold });
 
+  // #6: deja registro de que se envió la carta y la fecha límite para contestar.
+  // Tolerante: si las columnas de renovación aún no existen, el error se ignora y la carta igual sale.
+  if (deadlineDate && !Number.isNaN(Date.parse(deadlineDate + "T00:00:00Z"))) {
+    await admin
+      .from("leases")
+      .update({
+        renewal_deadline: deadlineDate,
+        renewal_sent_at: new Date().toISOString().slice(0, 10),
+        renewal_responded_at: null,
+      })
+      .eq("id", leaseId)
+      .eq("org_id", profile.org_id);
+  }
+
   const bytes = await doc.save();
   const b64 = Buffer.from(bytes).toString("base64");
   const safe = tenant.replace(/[^a-zA-Z0-9]+/g, "_").slice(0, 40);
   return { pdf: b64, filename: `Carta-renovacion-${safe}.pdf` };
+}
+
+/** Marca que el arrendatario ya contestó la renovación (#6). */
+export async function marcarRenovacionContestada(
+  leaseId: string,
+): Promise<{ ok?: true; error?: string }> {
+  const profile = await getProfile();
+  if (!profile || profile.role === "tenant") return { error: "No autorizado." };
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("leases")
+    .update({ renewal_responded_at: new Date().toISOString().slice(0, 10) })
+    .eq("id", leaseId)
+    .eq("org_id", profile.org_id);
+  if (error) return { error: "No se pudo guardar. ¿Ya corriste el SQL de renovación?" };
+  revalidatePath(`/inquilinos/${leaseId}`);
+  return { ok: true };
 }
 
 export async function generarRequerimientoPago(
