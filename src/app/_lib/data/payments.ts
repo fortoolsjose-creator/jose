@@ -20,7 +20,7 @@ export async function ensureCurrentPayments(): Promise<void> {
 
   const { data: leases } = await supabase
     .from("leases")
-    .select("id, rent_amount, payment_day")
+    .select("id, rent_amount, parking_fee, furniture_fee, payment_day")
     .eq("status", "active")
     .is("deleted_at", null);
 
@@ -29,7 +29,11 @@ export async function ensureCurrentPayments(): Promise<void> {
       org_id: profile.org_id,
       lease_id: l.id,
       period_month: periodMonth,
-      amount_due: l.rent_amount,
+      // La renta incluye estacionamiento y muebles (se pagan al arrendador). La cuota de mantenimiento va aparte.
+      amount_due:
+        Number(l.rent_amount) +
+        Number((l as { parking_fee?: number }).parking_fee ?? 0) +
+        Number((l as { furniture_fee?: number }).furniture_fee ?? 0),
       due_date: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(Math.min(l.payment_day, 28))}`,
       status: "pending" as const,
     }));

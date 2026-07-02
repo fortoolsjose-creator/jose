@@ -15,6 +15,10 @@ import { formatMonth, formatDate } from "@/app/_lib/format";
 const DAY = 86_400_000;
 const CADENCE: Record<number, string> = { 3: "pre", 0: "due", [-1]: "overdue", [-7]: "overdue7" };
 
+/** No mandar correos a las direcciones placeholder (aún no son buzones reales). */
+const isRealEmail = (e: string | null | undefined): e is string =>
+  !!e && !e.endsWith("@pendiente.example.com") && !e.endsWith("@example.com");
+
 export async function runReminderSweep(): Promise<{ sent: number; scanned: number }> {
   const admin = createAdminClient();
   const todayUTC = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00Z").getTime();
@@ -25,7 +29,7 @@ export async function runReminderSweep(): Promise<{ sent: number; scanned: numbe
       "id, period_month, amount_due, amount_paid, due_date, status, lease:leases(tenant:profiles(email))",
     )
     .is("deleted_at", null)
-    .in("status", ["pending", "overdue"]);
+    .in("status", ["pending", "overdue", "partial"]);
 
   const rows = data ?? [];
   let sent = 0;
@@ -33,11 +37,12 @@ export async function runReminderSweep(): Promise<{ sent: number; scanned: numbe
     const bal = Number(p.amount_due) - Number(p.amount_paid ?? 0);
     if (bal <= 0 || !p.due_date) continue;
     const diff = Math.round((new Date(p.due_date + "T00:00:00Z").getTime() - todayUTC) / DAY);
-    const cadence = CADENCE[diff];
+    // Cadencia base (T-3, día 0, +1, +7) y, si sigue vencido, un recordatorio semanal recurrente.
+    const cadence = CADENCE[diff] ?? (diff < 0 && diff % 7 === 0 ? "overdue7" : undefined);
     if (!cadence) continue;
     const email = (p as unknown as { lease?: { tenant?: { email: string | null } } }).lease
       ?.tenant?.email;
-    if (!email) continue;
+    if (!isRealEmail(email)) continue;
     await notify({
       to: email,
       template: "payment_reminder",
@@ -102,9 +107,10 @@ export async function runRenewalReminderSweep(): Promise<{ sent: number }> {
     const unit = [lease.unit?.property?.name, lease.unit?.label].filter(Boolean).join(" · ");
     const base = { endDate: formatDate(l.end_date as string), unit, cadence };
 
-    if (lease.tenant?.email) {
+    const temail = lease.tenant?.email;
+    if (isRealEmail(temail)) {
       await notify({
-        to: lease.tenant.email,
+        to: temail,
         template: "renewal_reminder",
         data: { ...base, audience: "tenant" },
       });
@@ -202,24 +208,26 @@ export async function sendPaymentReminders(): Promise<{ sent: number }> {
   const { data } = await supabase
     .from("payments")
     .select(
-      "id, period_month, amount_due, due_date, status, lease:leases(tenant:profiles(email))",
+      "id, period_month, amount_due, amount_paid, due_date, status, lease:leases(tenant:profiles(email))",
     )
     .is("deleted_at", null)
-    .in("status", ["pending", "overdue"])
+    .in("status", ["pending", "overdue", "partial"])
     .lte("due_date", soon);
 
   let sent = 0;
   for (const p of data ?? []) {
+    const bal = Number(p.amount_due) - Number(p.amount_paid ?? 0);
+    if (bal <= 0) continue;
     const email = (
       p as unknown as { lease?: { tenant?: { email: string | null } } }
     ).lease?.tenant?.email;
-    if (!email) continue;
+    if (!isRealEmail(email)) continue;
     await notify({
       to: email,
       template: "payment_reminder",
       data: {
         period: formatMonth(p.period_month),
-        amount: p.amount_due,
+        amount: bal,
         dueDate: p.due_date ? formatDate(p.due_date) : "pronto",
       },
     });

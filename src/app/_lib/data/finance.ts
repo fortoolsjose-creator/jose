@@ -4,13 +4,18 @@ import type { Payment } from "@/app/_lib/types";
 
 const DAY = 86_400_000;
 
-const pad = (n: number) => String(n).padStart(2, "0");
-export function currentPeriod(d = new Date()): string {
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`;
+/** Hoy en America/Mexico_City como YYYY-MM-DD (evita el desfase por el reloj UTC del servidor). */
+function todayMX(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Mexico_City" }).format(new Date());
+}
+export function currentPeriod(): string {
+  return `${todayMX().slice(0, 7)}-01`;
 }
 export function daysOverdue(due: string | null): number {
   if (!due) return 0;
-  const diff = Math.floor((Date.now() - new Date(due + "T00:00:00Z").getTime()) / DAY);
+  const diff = Math.floor(
+    (Date.parse(todayMX() + "T00:00:00Z") - Date.parse(due + "T00:00:00Z")) / DAY,
+  );
   return diff > 0 ? diff : 0;
 }
 export function isOverdue(p: { amount_due: number; amount_paid: number; status: string; due_date: string | null; period_month?: string | null }): boolean {
@@ -120,9 +125,12 @@ export async function listDebtors(): Promise<Debtor[]> {
     )
     .is("deleted_at", null);
 
+  // La tasa se aplica a CADA recibo con sus propios días de atraso, no al saldo agregado.
+  const { tasa, gracia } = await getMoraConfig();
+
   const byLease = new Map<
     string,
-    { saldo: number; oldest: string | null; tenant: string; unit: string }
+    { saldo: number; oldest: string | null; mora: number; tenant: string; unit: string }
   >();
   for (const r of data ?? []) {
     if (!isOverdue(r)) continue;
@@ -133,28 +141,26 @@ export async function listDebtors(): Promise<Debtor[]> {
       byLease.get(r.lease_id) ?? {
         saldo: 0,
         oldest: null,
+        mora: 0,
         tenant: lease?.tenant?.full_name ?? lease?.tenant?.email ?? "Arrendatario",
         unit: [lease?.unit?.property?.name, lease?.unit?.label].filter(Boolean).join(" · "),
       };
-    e.saldo += Number(r.amount_due) - Number(r.amount_paid);
+    const bal = Number(r.amount_due) - Number(r.amount_paid);
+    e.saldo += bal;
+    e.mora += calcMora(bal, daysOverdue(r.due_date), tasa, gracia);
     if (r.due_date && (!e.oldest || r.due_date < e.oldest)) e.oldest = r.due_date;
     byLease.set(r.lease_id, e);
   }
 
-  const { tasa, gracia } = await getMoraConfig();
-
   return [...byLease.entries()]
-    .map(([lease_id, e]) => {
-      const diasAtraso = daysOverdue(e.oldest);
-      return {
-        lease_id,
-        tenant: e.tenant,
-        unit: e.unit,
-        saldoVencido: e.saldo,
-        diasAtraso,
-        moraCalculada: calcMora(e.saldo, diasAtraso, tasa, gracia),
-      };
-    })
+    .map(([lease_id, e]) => ({
+      lease_id,
+      tenant: e.tenant,
+      unit: e.unit,
+      saldoVencido: e.saldo,
+      diasAtraso: daysOverdue(e.oldest),
+      moraCalculada: Math.round(e.mora),
+    }))
     .sort((a, b) => b.saldoVencido - a.saldoVencido);
 }
 
