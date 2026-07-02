@@ -44,3 +44,8 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# Scripts de un solo uso y datos reales — NUNCA al repo (traen contraseñas y padrón)
+/scripts/
+/build-output.txt
+/supabase/seed.mjs

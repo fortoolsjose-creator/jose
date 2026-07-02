@@ -53,7 +53,7 @@ npm run dev   # http://localhost:3000
 
 ### Demo accounts (after seeding)
 
-Password for all: `Llave1234!`
+Password: set locally after seeding (never committed).
 
 | Role          | Email                      | State                 |
 | ------------- | -------------------------- | --------------------- |
