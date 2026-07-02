@@ -32,8 +32,17 @@ export async function addValuation(
   });
   if (error) return { error: "No se pudo guardar la valuación." };
 
-  // El valor vigente de la propiedad = la valuación más reciente.
-  await admin.from("properties").update({ market_value: value }).eq("id", propertyId);
+  // El valor vigente = la valuación con la FECHA más reciente (no la última tecleada),
+  // para que capturar un avalúo viejo no pise el valor actual.
+  const { data: latest } = await admin
+    .from("property_valuations")
+    .select("market_value")
+    .eq("property_id", propertyId)
+    .order("valued_on", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const vigente = latest ? Number(latest.market_value) : value;
+  await admin.from("properties").update({ market_value: vigente }).eq("id", propertyId);
 
   revalidatePath(`/propiedades/${propertyId}`);
   revalidatePath("/rentabilidad");

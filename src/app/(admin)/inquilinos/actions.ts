@@ -70,7 +70,11 @@ export async function createLease(input: LeaseInput): Promise<LeaseResult> {
       email,
       phone,
     });
-    if (pErr) return { error: "No se pudo crear el perfil del arrendatario." };
+    if (pErr) {
+      // Evita dejar un usuario Auth huérfano que inutilizaría ese correo para siempre.
+      await admin.auth.admin.deleteUser(tenantId);
+      return { error: "No se pudo crear el perfil del arrendatario." };
+    }
   }
 
   const { error: lErr } = await admin.from("leases").insert({

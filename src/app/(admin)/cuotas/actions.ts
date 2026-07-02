@@ -8,7 +8,7 @@ import { isPeriodLocked } from "@/app/_lib/data/period-locks";
 
 const schema = z.object({
   method: z.enum(["spei", "cash", "oxxo", "card", "other"]),
-  amount: z.coerce.number().min(0),
+  amount: z.coerce.number().positive("El monto debe ser mayor a 0."),
   paid_date: z.string().min(1),
 });
 
@@ -25,7 +25,7 @@ export async function confirmFee(
   const supabase = await createClient();
   const { data: fee } = await supabase
     .from("maintenance_fees")
-    .select("id, amount_due, period_month")
+    .select("id, amount_due, amount_paid, period_month")
     .eq("id", feeId)
     .maybeSingle();
   if (!fee) return { error: "Cuota no encontrada." };
@@ -33,11 +33,13 @@ export async function confirmFee(
     return { error: "Ese mes ya está cerrado. Pídele al dueño reabrirlo para registrar cuotas." };
   }
 
-  const status = d.amount >= Number(fee.amount_due) ? "paid" : "partial";
+  // Acumula los abonos (no sobrescribe): el 2º pago parcial se suma al 1º.
+  const newPaid = Math.round((Number(fee.amount_paid ?? 0) + d.amount) * 100) / 100;
+  const status = newPaid >= Number(fee.amount_due) ? "paid" : "partial";
   const { error } = await supabase
     .from("maintenance_fees")
     .update({
-      amount_paid: d.amount,
+      amount_paid: newPaid,
       paid_date: d.paid_date,
       method: d.method,
       status,
